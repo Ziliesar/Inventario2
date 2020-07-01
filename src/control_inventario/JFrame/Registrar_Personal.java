@@ -5,16 +5,20 @@
  */
 package control_inventario.JFrame;
 
+import control_inventario.cargo;
 import control_inventario.conexion;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import java.sql.*;
+
 
 /**
  *
@@ -28,6 +32,9 @@ public class Registrar_Personal extends javax.swing.JFrame {
     public Registrar_Personal() {
         initComponents();
         mostrarPersonal();
+        control_inventario.cargo car = new cargo();
+        car.mostrarCargo(jComboBox1);
+        
     }
     
     void mostrarPersonal(){
@@ -39,15 +46,17 @@ public class Registrar_Personal extends javax.swing.JFrame {
         modelo.addColumn("Nombre");
         modelo.addColumn("Apellodos");
         modelo.addColumn("Correo");
+        modelo.addColumn("Nombre Usuario");
+        modelo.addColumn("Contraseña Usuario");
         modelo.addColumn("Cargo");
           
         jtable_personal.setModel(modelo);
         String sql="";
        
-        sql="SELECT * FROM personal";
+        sql="SELECT per.identidad, per.nombres, per.apellidos, per.correo, us.nombre_user, us.contra_user, car.cargo FROM personal per INNER JOIN usuario us on per.identidad=us.identidad INNER JOIN cargo car on per.id_cargo=car.id_cargo";
      
         
-        String []datos=new String [5];
+        String []datos=new String [7];
         try{
             Statement st=cn.createStatement();
             ResultSet rs=st.executeQuery(sql);
@@ -57,6 +66,8 @@ public class Registrar_Personal extends javax.swing.JFrame {
             datos[2]=rs.getString(3);
             datos[3]=rs.getString(4);
             datos[4]=rs.getString(5);
+            datos[5]=rs.getString(6);
+            datos[6]=rs.getString(7);
             
             modelo.addRow(datos);
             }
@@ -70,12 +81,37 @@ public class Registrar_Personal extends javax.swing.JFrame {
         control_inventario.conexion cc = new conexion();
         Connection cn=cc.conexion();
         try{
+            int idCargo;
+            idCargo = jComboBox1.getItemAt(jComboBox1.getSelectedIndex()).getIdCargo(); 
+            
             PreparedStatement pst=cn.prepareStatement("INSERT INTO personal(identidad, nombres, apellidos, correo, id_cargo) VALUES(?,?,?,?,?)");
             pst.setString(1,txt_id.getText());
             pst.setString(2,txt_nombres.getText());
             pst.setString(3,txt_apellidos.getText());
             pst.setString(4,txt_correo.getText());
-            pst.setString(5,txt_user.getText());
+            pst.setInt(5, idCargo);
+
+        
+        int a=pst.executeUpdate();
+        if(a>0){
+            JOptionPane.showMessageDialog(null,"Registro exitoso");
+             mostrarPersonal();
+        }
+        else{
+             JOptionPane.showMessageDialog(null,"Error al agregar");
+        }
+        }catch(Exception e){
+        } 
+    }
+    
+    public void RegistrarUsuario(){
+        control_inventario.conexion cc = new conexion();
+        Connection cn=cc.conexion();
+        try{
+            PreparedStatement pst=cn.prepareStatement("INSERT INTO usuario(identidad, nombre_user, contra_user)  VALUES(?,?,?)");
+            pst.setString(1,txt_id.getText());
+            pst.setString(2,txt_user.getText());
+            pst.setString(3,txt_contra.getText());
 
         
         int a=pst.executeUpdate();
@@ -141,7 +177,11 @@ public class Registrar_Personal extends javax.swing.JFrame {
         jLabel7.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel7.setText("contraseña");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel8.setText("Cargo");
@@ -168,35 +208,39 @@ public class Registrar_Personal extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(70, 70, 70)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 637, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel5)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel6)
-                        .addGap(41, 41, 41)
+                        .addGap(70, 70, 70)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel5)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(txt_id)
-                                    .addComponent(txt_nombres)
-                                    .addComponent(txt_apellidos)
-                                    .addComponent(txt_correo, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE))
-                                .addGap(66, 66, 66)
+                                .addComponent(jLabel6)
+                                .addGap(41, 41, 41)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel7)
-                                    .addComponent(jLabel8))
-                                .addGap(32, 32, 32)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(txt_user)
-                                    .addComponent(jComboBox1, 0, 132, Short.MAX_VALUE)
-                                    .addComponent(txt_contra)))
-                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(65, Short.MAX_VALUE))
+                                    .addComponent(jLabel1)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(txt_id)
+                                            .addComponent(txt_nombres)
+                                            .addComponent(txt_apellidos)
+                                            .addComponent(txt_correo, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE))
+                                        .addGap(66, 66, 66)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel3)
+                                            .addComponent(jLabel7)
+                                            .addComponent(jLabel8))
+                                        .addGap(32, 32, 32)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(txt_user)
+                                            .addComponent(jComboBox1, 0, 132, Short.MAX_VALUE)
+                                            .addComponent(txt_contra)))
+                                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(36, 36, 36)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 697, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(39, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -225,11 +269,11 @@ public class Registrar_Personal extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(txt_correo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(31, 31, 31)
+                .addGap(24, 24, 24)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(29, 29, 29)
+                .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(57, Short.MAX_VALUE))
+                .addContainerGap(74, Short.MAX_VALUE))
         );
 
         pack();
@@ -237,8 +281,16 @@ public class Registrar_Personal extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+         
         RegistrarPersonal();
+        RegistrarUsuario();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        // TODO add your handling code here:
+        //Creamos objeto tipo Connection    
+        
+    }//GEN-LAST:event_jComboBox1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -280,7 +332,7 @@ public class Registrar_Personal extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<cargo> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -299,3 +351,4 @@ public class Registrar_Personal extends javax.swing.JFrame {
     private javax.swing.JTextField txt_user;
     // End of variables declaration//GEN-END:variables
 }
+//SELECT per.identidad, per.nombres, per.apellidos, per.correo, us.nombre_user, us.contra_user, car.cargo FROM personal per INNER JOIN usuario us on per.identidad=us.identidad INNER JOIN cargo car on per.id_cargo=car.id_cargo
