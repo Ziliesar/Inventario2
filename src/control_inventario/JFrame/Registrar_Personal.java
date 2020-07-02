@@ -22,7 +22,7 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import java.sql.*;
 import javax.swing.ImageIcon;
-import tipografias.Fuentes;
+
 
 
 /**
@@ -31,7 +31,7 @@ import tipografias.Fuentes;
  */
 public class Registrar_Personal extends javax.swing.JFrame {
     
-    Fuentes tipofuente;
+   
 
     /**
      * Creates new form Registrar_Personal
