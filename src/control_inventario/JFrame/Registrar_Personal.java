@@ -7,6 +7,9 @@ package control_inventario.JFrame;
 
 import control_inventario.cargo;
 import control_inventario.conexion;
+import java.awt.Color;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,6 +21,8 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import java.sql.*;
+import javax.swing.ImageIcon;
+import tipografias.Fuentes;
 
 
 /**
@@ -25,6 +30,8 @@ import java.sql.*;
  * @author arlir
  */
 public class Registrar_Personal extends javax.swing.JFrame {
+    
+    Fuentes tipofuente;
 
     /**
      * Creates new form Registrar_Personal
@@ -34,7 +41,26 @@ public class Registrar_Personal extends javax.swing.JFrame {
         mostrarPersonal();
         control_inventario.cargo car = new cargo();
         car.mostrarCargo(jComboBox1);
+        this.setTitle("Inventario Digital Palace");
+        Image ico= Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("img/icono.png"));
+        this.setIconImage(ico);
+    
+        Color colorAzulF=new Color(20, 63, 82);//AZULDE FONDO
+        Color colorGrisL=new Color(215, 225, 229);//LETRAS
+        //this.getContentPane().setBackground(colorAzulF);
+       
+        //ImageIcon imagen=new ImageIcon(new ImageIcon(getClass().getResource("img/fond.JPG")).getImage());
         
+        jLabel1.setForeground(colorGrisL);
+        jLabel2.setForeground(colorGrisL);
+        jLabel3.setForeground(colorGrisL);
+        jLabel4.setForeground(colorGrisL);
+        jLabel5.setForeground(colorGrisL);
+        jLabel6.setForeground(colorGrisL);
+        jLabel7.setForeground(colorGrisL);
+        jLabel8.setForeground(colorGrisL);
+        
+        this.setResizable(false);
     }
     
     void mostrarPersonal(){
@@ -107,12 +133,17 @@ public class Registrar_Personal extends javax.swing.JFrame {
     public void RegistrarUsuario(){
         control_inventario.conexion cc = new conexion();
         Connection cn=cc.conexion();
+        String contr;
         try{
             PreparedStatement pst=cn.prepareStatement("INSERT INTO usuario(identidad, nombre_user, contra_user)  VALUES(?,?,?)");
             pst.setString(1,txt_id.getText());
             pst.setString(2,txt_user.getText());
-            pst.setString(3,txt_contra.getText());
-
+            
+            contr=String.valueOf(txt_contra.getPassword());
+            /*Convertir contraseña*****************************/
+            
+            
+            pst.setString(3,contr);    
         
         int a=pst.executeUpdate();
         if(a>0){
@@ -153,38 +184,55 @@ public class Registrar_Personal extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jtable_personal = new javax.swing.JTable();
+        jLabel10 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
         jLabel1.setText("Registro de Personal");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(192, 32, -1, -1));
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel2.setText("Nombres:");
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 173, -1, -1));
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel3.setText("Nombre Usuario");
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(403, 126, -1, -1));
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel4.setText("Apellidos:");
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 227, -1, -1));
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel5.setText("Correo");
+        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 280, -1, -1));
+        getContentPane().add(txt_id, new org.netbeans.lib.awtextra.AbsoluteConstraints(192, 130, 145, -1));
+        getContentPane().add(txt_nombres, new org.netbeans.lib.awtextra.AbsoluteConstraints(192, 177, 145, -1));
+        getContentPane().add(txt_apellidos, new org.netbeans.lib.awtextra.AbsoluteConstraints(192, 231, 145, -1));
+        getContentPane().add(txt_correo, new org.netbeans.lib.awtextra.AbsoluteConstraints(192, 284, 145, -1));
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel6.setText("Identidad:");
+        getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 126, -1, -1));
+        getContentPane().add(txt_user, new org.netbeans.lib.awtextra.AbsoluteConstraints(562, 130, 132, -1));
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel7.setText("contraseña");
+        jLabel7.setText("Contraseña");
+        getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(403, 173, -1, -1));
 
         jComboBox1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox1ActionPerformed(evt);
             }
         });
+        getContentPane().add(jComboBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(562, 230, 132, -1));
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel8.setText("Cargo");
+        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(403, 227, -1, -1));
+        getContentPane().add(txt_contra, new org.netbeans.lib.awtextra.AbsoluteConstraints(562, 177, 132, -1));
 
         jButton1.setText("Registrar");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -192,6 +240,7 @@ public class Registrar_Personal extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 330, 90, 36));
 
         jtable_personal.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -203,80 +252,14 @@ public class Registrar_Personal extends javax.swing.JFrame {
         ));
         jScrollPane2.setViewportView(jtable_personal);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(70, 70, 70)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel5)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel6)
-                                .addGap(41, 41, 41)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel1)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(txt_id)
-                                            .addComponent(txt_nombres)
-                                            .addComponent(txt_apellidos)
-                                            .addComponent(txt_correo, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE))
-                                        .addGap(66, 66, 66)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel3)
-                                            .addComponent(jLabel7)
-                                            .addComponent(jLabel8))
-                                        .addGap(32, 32, 32)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(txt_user)
-                                            .addComponent(jComboBox1, 0, 132, Short.MAX_VALUE)
-                                            .addComponent(txt_contra)))
-                                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(36, 36, 36)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 697, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(39, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(32, 32, 32)
-                .addComponent(jLabel1)
-                .addGap(50, 50, 50)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txt_id, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3)
-                    .addComponent(txt_user, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6))
-                .addGap(23, 23, 23)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(txt_nombres, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel7)
-                    .addComponent(txt_contra, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(30, 30, 30)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(txt_apellidos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel8))
-                .addGap(28, 28, 28)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(txt_correo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(24, 24, 24)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(74, Short.MAX_VALUE))
-        );
+        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(36, 382, 697, 122));
+
+        jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/control_inventario/JFrame/fond2.JPG"))); // NOI18N
+        jLabel10.setText("jLabel10");
+        getContentPane().add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 770, 580));
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -334,6 +317,7 @@ public class Registrar_Personal extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JComboBox<cargo> jComboBox1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -351,4 +335,5 @@ public class Registrar_Personal extends javax.swing.JFrame {
     private javax.swing.JTextField txt_user;
     // End of variables declaration//GEN-END:variables
 }
+
 //SELECT per.identidad, per.nombres, per.apellidos, per.correo, us.nombre_user, us.contra_user, car.cargo FROM personal per INNER JOIN usuario us on per.identidad=us.identidad INNER JOIN cargo car on per.id_cargo=car.id_cargo
