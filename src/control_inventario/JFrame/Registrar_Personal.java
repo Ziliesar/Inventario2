@@ -184,8 +184,8 @@ public class Registrar_Personal extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jtable_personal = new javax.swing.JTable();
-        jLabel10 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
+        jLabel10 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -241,7 +241,7 @@ public class Registrar_Personal extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 330, 90, 36));
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 330, 90, 40));
 
         jtable_personal.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -255,17 +255,17 @@ public class Registrar_Personal extends javax.swing.JFrame {
 
         getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(36, 382, 697, 122));
 
-        jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/control_inventario/JFrame/fond2.JPG"))); // NOI18N
-        jLabel10.setText("jLabel10");
-        getContentPane().add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 770, 530));
-
         jButton2.setText("Regresar");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 550, -1, -1));
+        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 330, 90, 40));
+
+        jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/control_inventario/JFrame/fond2.JPG"))); // NOI18N
+        jLabel10.setText("jLabel10");
+        getContentPane().add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 770, 530));
 
         pack();
         setLocationRelativeTo(null);
