@@ -51,17 +51,24 @@ public class InicioSesion extends javax.swing.JFrame {
         Connection cn = cc.conexion();
         String sql="SELECT nombre_user FROM usuario where nombre_user='"+user+"'";
         String sql2="SELECT contra_user FROM usuario where contra_user='"+contra+"'";
+        String verificar1="SELECT identidad FROM usuario where nombre_user='"+user+"'";
+        String verificar2="SELECT identidad FROM usuario where contra_user='"+contra+"'";
+        
+        String cp3="NN!";
+        String cp4="NN$";
+        
         
         int paseuser = 0;
         int pasecontra = 0;
         int entra = 0;
+
+                
                 
         try {
             Statement st=cn.createStatement();
             ResultSet rs=st.executeQuery(sql);
             
             while(rs.next()){
-                
                 String usn = rs.getString(1);
                 if(usn.equals(user)){
                     //System.out.println("Bienvenido");
@@ -80,6 +87,27 @@ public class InicioSesion extends javax.swing.JFrame {
                 }
             }
             
+            
+            Statement st3=cn.createStatement();
+            ResultSet rs3=st3.executeQuery(verificar1);
+            
+            while(rs3.next()){
+                 cp3 = rs3.getString(1);
+                
+            }
+            Statement st4=cn.createStatement();
+            ResultSet rs4=st4.executeQuery(verificar2);
+            
+            while(rs4.next()){
+                cp4 = rs4.getString(1);
+                
+            }
+            
+            
+            
+            
+            
+            
             if(((pasecontra==0) && (paseuser==0))){
                 JOptionPane.showMessageDialog(null, "Usuario y Contraseña Incorrecta"); 
                 jpass_contra_user.setText("");
@@ -95,7 +123,18 @@ public class InicioSesion extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Usuario incorrecto"); jTextField1.setText("");
             }
             
+            
+            
+            if(cp3.equals(cp4)){
+                
+            }else{
+                JOptionPane.showMessageDialog(null, "Favor verifique sus datos"); jTextField1.setText("");
+                paseuser=0;
+                pasecontra=0;
+            }
+            
             if((paseuser==1) && (pasecontra==1)){
+                
                 JOptionPane.showMessageDialog(null, "Bienvenido");
                 Menu m = new Menu();
                 m.setVisible(true);
