@@ -10,7 +10,10 @@ import control_inventario.conexion;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.io.FileWriter;
 import java.io.Serial;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -163,6 +166,7 @@ public class InicioSesion extends javax.swing.JFrame {
         jTextField1 = new javax.swing.JTextField();
         jpass_contra_user = new javax.swing.JPasswordField();
         jButton2 = new javax.swing.JButton();
+        serialjbottom = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -204,8 +208,16 @@ public class InicioSesion extends javax.swing.JFrame {
         });
         getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 190, -1, -1));
 
+        serialjbottom.setText("Serial");
+        serialjbottom.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                serialjbottomActionPerformed(evt);
+            }
+        });
+        getContentPane().add(serialjbottom, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 310, -1, -1));
+
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/control_inventario/JFrame/fondoI.JPG"))); // NOI18N
-        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 400, 340));
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 400, 350));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -219,6 +231,78 @@ public class InicioSesion extends javax.swing.JFrame {
         // TODO add your handling code here:
         System.exit(0);
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    //OBTENER MAC
+    public class macO {
+
+    
+     public String conseguirMAC(){
+            StringBuilder sb = new StringBuilder();
+  NetworkInterface a; String linea;
+  try {
+   a = NetworkInterface.getByInetAddress(InetAddress.getLocalHost());
+   byte[] mac = a.getHardwareAddress();
+   
+
+   for (int i = 0; i < mac.length; i++) {
+    sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));  
+   } 
+   FileWriter fwriter = new FileWriter("mac.dat");
+   fwriter.write("MAC: " + sb.toString());
+   fwriter.close();
+   
+ //  lmac.setText("SE ha registrado la MAC exitosamente.");
+  } catch (Exception e) {
+   e.printStackTrace(); 
+  }
+  return ""+sb.toString();
+ }
+   
+    
+}
+    //FIN OBTENER MAC
+    
+    private void serialjbottomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_serialjbottomActionPerformed
+        String serialIn;//Serial de la base de datos
+        String Mac;//Dirección MAC de la pc
+        
+        macO p = new macO();//Llamar Función MAC
+        Mac=p.conseguirMAC();
+        serialIn=JOptionPane.showInputDialog("Ingrese su serial: ");
+        control_inventario.conexion cc = new conexion(); //where nombre_user='"+user+"' and '"+contra+"'
+        Connection cn = cc.conexion();
+        String serialBD="SELECT serial FROM seriales where serial='"+serialIn+"'";  
+        String almS="NN!";
+        
+        
+        
+        try {
+            
+            Statement st5=cn.createStatement();
+            ResultSet rs5=st5.executeQuery(serialBD);
+            
+            while(rs5.next()){
+                almS = rs5.getString(1);  
+            }
+            
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(InicioSesion.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+        
+        if(serialIn.equals(almS)){
+            
+        
+    
+           
+        }
+        
+        
+        
+        
+    }//GEN-LAST:event_serialjbottomActionPerformed
 
     /**
      * @param args the command line arguments
@@ -264,5 +348,6 @@ public class InicioSesion extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JPasswordField jpass_contra_user;
+    private javax.swing.JButton serialjbottom;
     // End of variables declaration//GEN-END:variables
 }
