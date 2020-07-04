@@ -5,6 +5,10 @@
  */
 package control_inventario.JFrame;
 
+import java.awt.Color;
+import java.awt.Image;
+import java.awt.Toolkit;
+
 /**
  *
  * @author arlir
@@ -16,6 +20,18 @@ public class Menu extends javax.swing.JFrame {
      */
     public Menu() {
         initComponents();
+        
+        this.setTitle("Menú inventario");
+        Image ico= Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("img/icono.png"));
+        this.setIconImage(ico);
+        this.setResizable(false);
+        setLocationRelativeTo(null);
+        Color colorAzulF=new Color(20, 63, 82);//AZULDE FONDO
+        Color colorGrisL=new Color(215, 225, 229);//LETRAS
+        this.getContentPane().setBackground(colorGrisL);
+        //ImageIcon imagen=new ImageIcon(new ImageIcon(getClass().getResource("img/fond.JPG")).getImage());
+        this.jLabel4.setBackground(colorAzulF);
+        this.jLabel4.setOpaque(true);
     }
 
     /**
@@ -27,6 +43,14 @@ public class Menu extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -35,6 +59,60 @@ public class Menu extends javax.swing.JFrame {
         jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jButton1.setForeground(new java.awt.Color(20, 63, 82));
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/control_inventario/JFrame/boton1.JPG"))); // NOI18N
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 120, 85, 100));
+
+        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/control_inventario/JFrame/boton2.JPG"))); // NOI18N
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 120, 85, 100));
+
+        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/control_inventario/JFrame/boton3.JPG"))); // NOI18N
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 120, 85, 100));
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(20, 63, 82));
+        jLabel1.setText("Personal");
+        jLabel1.setToolTipText("");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(66, 230, 60, -1));
+
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(20, 63, 82));
+        jLabel2.setText("Productos");
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(196, 230, 70, -1));
+
+        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(20, 63, 82));
+        jLabel3.setText("Áreas de productos");
+        jLabel3.setToolTipText("");
+        jLabel3.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(308, 230, 140, 15));
+
+        jLabel4.setBackground(new java.awt.Color(215, 225, 229));
+        jLabel4.setFont(new java.awt.Font("Tahoma", 0, 48)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(215, 225, 229));
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel4.setText("Menú");
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 457, 70));
+
+        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/control_inventario/JFrame/fondomenu2.JPG"))); // NOI18N
+        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 70, 460, 280));
 
         jMenu1.setText("Registrar");
 
@@ -54,7 +132,7 @@ public class Menu extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItem2);
 
-        jMenuItem3.setText("Areas de Productos");
+        jMenuItem3.setText("Áreas de productos");
         jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem3ActionPerformed(evt);
@@ -68,17 +146,6 @@ public class Menu extends javax.swing.JFrame {
         jMenuBar1.add(jMenu2);
 
         setJMenuBar(jMenuBar1);
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 457, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 346, Short.MAX_VALUE)
-        );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -103,6 +170,24 @@ public class Menu extends javax.swing.JFrame {
         regisArea.setVisible(true);
         dispose();
     }//GEN-LAST:event_jMenuItem3ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        Registrar_Personal regisPer = new Registrar_Personal();
+        regisPer.setVisible(true);
+        dispose(); 
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        Registrar_Productos regisPro = new Registrar_Productos();
+        regisPro.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+       Registrar_Area_Productos regisArea = new Registrar_Area_Productos();
+        regisArea.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -140,6 +225,14 @@ public class Menu extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
