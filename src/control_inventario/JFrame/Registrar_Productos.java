@@ -7,6 +7,7 @@ package control_inventario.JFrame;
 
 import control_inventario.area_productos;
 import control_inventario.conexion;
+import control_inventario.unidad_producto;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -24,7 +25,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author arlir
  */
-public class Registrar_Productos extends javax.swing.JFrame {
+public final class Registrar_Productos extends javax.swing.JFrame {
 
     /**
      * Creates new form Registrar_Productos
@@ -32,8 +33,12 @@ public class Registrar_Productos extends javax.swing.JFrame {
     public Registrar_Productos() {
         initComponents();
         mostrarProductos();
+        
         control_inventario.area_productos arp = new area_productos();
         arp.mostrarAreaProducto(jComboBox1);
+        
+        control_inventario.unidad_producto uni = new unidad_producto();
+        uni.mostrarUnidad(jComboBox2);
         
         this.setTitle("Registrar personal");
         Image ico= Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("img/icono.png"));
@@ -46,7 +51,7 @@ public class Registrar_Productos extends javax.swing.JFrame {
         //ImageIcon imagen=new ImageIcon(new ImageIcon(getClass().getResource("img/fond.JPG")).getImage());
         jLabel1.setForeground(colorGrisL);
         jLabel2.setForeground(colorGrisL);
-        jLabel3.setForeground(colorGrisL);
+        //jLabel0.setForeground(colorGrisL);
         jLabel4.setForeground(colorGrisL);
         jLabel5.setForeground(colorGrisL);
         jLabel6.setForeground(colorGrisL);
@@ -60,19 +65,21 @@ public class Registrar_Productos extends javax.swing.JFrame {
         DefaultTableModel modelo=new DefaultTableModel();
        
         modelo.addColumn("Codigo");
-        modelo.addColumn("Nombre");
         modelo.addColumn("Descripcion");
+        modelo.addColumn("Unidad");
         modelo.addColumn("cantidad");
         modelo.addColumn("Precio Compra");
         modelo.addColumn("Precio Venta");
+        modelo.addColumn("Area Producto");
           
         jTable_productos.setModel(modelo);
         String sql="";
        
-        sql="SELECT codigo, nombre, descripcion, cantidad, precio_compra, precio_venta FROM producto";
+        sql="SELECT pd.codigo, pd.descripcion, uni.unidad, pd.cantidad, pd.precio_compra, pd.precio_venta, apd.area_producto\n" +
+            "FROM producto pd INNER JOIN tipo_unidad uni on pd.id_unidad=uni.id_unidad INNER JOIN areas_productos apd on pd.id_area_producto=apd.id_area_producto;";
      
         
-        String []datos=new String [6];
+        String []datos=new String [7];
         try{
             Statement st=cn.createStatement();
             ResultSet rs=st.executeQuery(sql);
@@ -83,6 +90,7 @@ public class Registrar_Productos extends javax.swing.JFrame {
             datos[3]=rs.getString(4);
             datos[4]=rs.getString(5);
             datos[5]=rs.getString(6);
+            datos[6]=rs.getString(7);
             
             modelo.addRow(datos);
             }
@@ -96,13 +104,14 @@ public class Registrar_Productos extends javax.swing.JFrame {
         control_inventario.conexion cc = new conexion();
         Connection cn=cc.conexion();
         try{
-            int idArea;
+            int idArea, idUnidad;
             idArea = jComboBox1.getItemAt(jComboBox1.getSelectedIndex()).getId_area_producto(); 
+            idUnidad = jComboBox2.getItemAt(jComboBox2.getSelectedIndex()).getId_unidad();
             
-            PreparedStatement pst=cn.prepareStatement("INSERT INTO producto(codigo, nombre, descripcion, cantidad, precio_compra, precio_venta, id_area_producto) VALUES(?,?,?,?,?,?,?)");
+            PreparedStatement pst=cn.prepareStatement("INSERT INTO producto(codigo, descripcion, id_unidad, cantidad, precio_compra, precio_venta, id_area_producto) VALUES(?,?,?,?,?,?,?)");
             pst.setString(1,txt_codigo.getText());
-            pst.setString(2,txt_nombre_producto.getText());
-            pst.setString(3,txtA_descripcion.getText());
+            pst.setString(2,txtA_descripcion.getText());
+            pst.setInt(3, idUnidad);
             pst.setString(4,txt_cantidad.getText());
             pst.setString(5, txtx_precio_compra.getText());
             pst.setString(6, txt_precio_venta.getText());
@@ -134,12 +143,10 @@ public class Registrar_Productos extends javax.swing.JFrame {
         jTable_productos = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         txt_codigo = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
         txtA_descripcion = new javax.swing.JTextArea();
-        txt_nombre_producto = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
@@ -152,6 +159,8 @@ public class Registrar_Productos extends javax.swing.JFrame {
         jComboBox1 = new javax.swing.JComboBox<>();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
+        jLabel10 = new javax.swing.JLabel();
+        jComboBox2 = new javax.swing.JComboBox<>();
         jLabel9 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -178,21 +187,18 @@ public class Registrar_Productos extends javax.swing.JFrame {
         jLabel2.setText("Código:");
         getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(55, 120, -1, -1));
 
-        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel3.setText("Nombre:");
-        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(55, 162, -1, -1));
-
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel4.setText("Descripción:");
-        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(55, 202, -1, -1));
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 160, -1, -1));
         getContentPane().add(txt_codigo, new org.netbeans.lib.awtextra.AbsoluteConstraints(168, 124, 226, -1));
+
+        jScrollPane2.setOpaque(false);
 
         txtA_descripcion.setColumns(20);
         txtA_descripcion.setRows(5);
         jScrollPane2.setViewportView(txtA_descripcion);
 
-        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(168, 204, 226, -1));
-        getContentPane().add(txt_nombre_producto, new org.netbeans.lib.awtextra.AbsoluteConstraints(168, 166, 226, -1));
+        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 160, 226, 70));
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel5.setText("Cantidad:");
@@ -235,7 +241,7 @@ public class Registrar_Productos extends javax.swing.JFrame {
                 jComboBox1ActionPerformed(evt);
             }
         });
-        getContentPane().add(jComboBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(555, 249, 171, -1));
+        getContentPane().add(jComboBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(555, 249, 170, -1));
 
         jButton3.setText("Registrar área producto");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -253,8 +259,14 @@ public class Registrar_Productos extends javax.swing.JFrame {
         });
         getContentPane().add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 340, -1, -1));
 
+        jLabel10.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel10.setText("Unidad:");
+        getContentPane().add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 250, -1, -1));
+
+        getContentPane().add(jComboBox2, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 250, 160, -1));
+
         jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/control_inventario/JFrame/fondoR.jpg"))); // NOI18N
-        getContentPane().add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 810, 650));
+        getContentPane().add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 800, 670));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -326,9 +338,10 @@ public class Registrar_Productos extends javax.swing.JFrame {
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JComboBox<area_productos> jComboBox1;
+    private javax.swing.JComboBox<unidad_producto> jComboBox2;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
@@ -341,7 +354,6 @@ public class Registrar_Productos extends javax.swing.JFrame {
     private javax.swing.JTextArea txtA_descripcion;
     private javax.swing.JTextField txt_cantidad;
     private javax.swing.JTextField txt_codigo;
-    private javax.swing.JTextField txt_nombre_producto;
     private javax.swing.JTextField txt_precio_venta;
     private javax.swing.JTextField txtx_precio_compra;
     // End of variables declaration//GEN-END:variables
