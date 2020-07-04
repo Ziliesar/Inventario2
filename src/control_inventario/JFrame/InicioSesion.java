@@ -128,14 +128,14 @@ public class InicioSesion extends javax.swing.JFrame {
             if(cp3.equals(cp4)){
                 
             }else{
-                JOptionPane.showMessageDialog(null, "Favor verifique sus datos"+cp3+"  2:"+cp4); jTextField1.setText("");
+                JOptionPane.showMessageDialog(null, "Favor verifique sus datos"); jTextField1.setText("");
                 paseuser=0;
                 pasecontra=0;
             }
             
             if((paseuser==1) && (pasecontra==1)){
                 
-                JOptionPane.showMessageDialog(null, "Bienvenido"+cp3+"  2:"+cp4);
+                JOptionPane.showMessageDialog(null, "Bienvenido");
                 Menu m = new Menu();
                 m.setVisible(true);
                 dispose();
