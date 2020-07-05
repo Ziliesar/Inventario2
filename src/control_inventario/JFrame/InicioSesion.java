@@ -7,6 +7,7 @@ package control_inventario.JFrame;
 
 import com.mysql.jdbc.PreparedStatement;
 import control_inventario.conexion;
+import control_inventario.conexionH;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -14,7 +15,7 @@ import java.io.FileWriter;
 import java.io.Serial;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
-import java.sql.Connection;
+import java.sql.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -52,6 +53,10 @@ public class InicioSesion extends javax.swing.JFrame {
         String contra = jpass_contra_user.getText();
         control_inventario.conexion cc = new conexion(); //where nombre_user='"+user+"' and '"+contra+"'
         Connection cn = cc.conexion();
+        
+        
+        conexionH ccH = new conexionH(); //where nombre_user='"+user+"' and '"+contra+"'
+        Connection cnH = ccH.conexionH();
         String sql="SELECT nombre_user FROM usuario where nombre_user='"+user+"'";
         String sql2="SELECT contra_user FROM usuario where contra_user='"+contra+"'";
         String verificar1="SELECT identidad FROM usuario where nombre_user='"+user+"'";
@@ -263,23 +268,26 @@ public class InicioSesion extends javax.swing.JFrame {
     //FIN OBTENER MAC
     
     private void serialjbottomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_serialjbottomActionPerformed
+        
+        
+        
         String serialIn;//Serial de la base de datos
         String Mac;//Dirección MAC de la pc
         
         macO p = new macO();//Llamar Función MAC
         Mac=p.conseguirMAC();
         serialIn=JOptionPane.showInputDialog("Ingrese su serial: ");
-        control_inventario.conexion cc = new conexion(); //where nombre_user='"+user+"' and '"+contra+"'
-        Connection cn = cc.conexion();
-        String serialBD="SELECT serial FROM seriales where serial='"+serialIn+"'";  
+        control_inventario.conexionH ccH = new conexionH(); //where nombre_user='"+user+"' and '"+contra+"'
+        Connection cnH = ccH.conexionH();
+        String serialBDH="SELECT serial FROM seriales where serial='"+serialIn+"'";  
         String almS="NN!";
         
         
         
         try {
             
-            Statement st5=cn.createStatement();
-            ResultSet rs5=st5.executeQuery(serialBD);
+            Statement st5=cnH.createStatement();
+            ResultSet rs5=st5.executeQuery(serialBDH);
             
             while(rs5.next()){
                 almS = rs5.getString(1);  
@@ -294,13 +302,17 @@ public class InicioSesion extends javax.swing.JFrame {
         
         if(serialIn.equals(almS)){
             
-        
-    
+            
+            
            
         }
         
         
-        
+        try {
+            PreparedStatement pstH = (PreparedStatement) cnH.prepareStatement("UPDATE seriales SET mac='"+Mac+"' WHERE serial='"+serialIn+"'");
+        pstH.executeUpdate();
+        } catch (Exception e) {
+        }
         
     }//GEN-LAST:event_serialjbottomActionPerformed
 
@@ -350,4 +362,8 @@ public class InicioSesion extends javax.swing.JFrame {
     private javax.swing.JPasswordField jpass_contra_user;
     private javax.swing.JButton serialjbottom;
     // End of variables declaration//GEN-END:variables
+
+        conexionH ccH = new conexionH(); //where nombre_user='"+user+"' and '"+contra+"'
+        Connection cnH = ccH.conexionH();
+
 }
