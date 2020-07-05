@@ -7,11 +7,13 @@ package control_inventario.JFrame;
 
 import control_inventario.conexion;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -28,7 +30,6 @@ public class Registrar_Ventas extends javax.swing.JFrame {
     public Registrar_Ventas() {
         initComponents();
         txt_total_pagar.setEditable(false);
-        
         tablaV = (DefaultTableModel) jTable_Venta_Productos.getModel();
     }
     
@@ -65,6 +66,7 @@ public class Registrar_Ventas extends javax.swing.JFrame {
         String Cantidad = txt_cantidad_venta.getText();
         String PrecioVenta = txt_precio_venta.getText();
         
+        
         int Total1 = Integer.parseInt(Cantidad) * Integer.parseInt(PrecioVenta);
         String Total2 = Integer.toString(Total1);
         //--------------------------------------------------------------------------
@@ -78,8 +80,11 @@ public class Registrar_Ventas extends javax.swing.JFrame {
     }
     
     public void RevisarCantidad(){
-        int cantidaEx = Integer.parseInt(txt_cantidad_existente.getText());
-        int cantidadVenta = Integer.parseInt(txt_cantidad_venta.getText());
+        String cantidad_existente = txt_cantidad_existente.getText();
+        String cantidad_venta = txt_cantidad_venta.getText();
+        
+        int cantidaEx = Integer.parseInt(cantidad_existente);
+        int cantidadVenta = Integer.parseInt(cantidad_venta);
         
         if(cantidadVenta > cantidaEx){
             btb_Agregar_Producto.setEnabled(false);
@@ -112,6 +117,140 @@ public class Registrar_Ventas extends javax.swing.JFrame {
         txt_cantidad_existente.setText("");
         txt_precio_venta.setText("");
     }
+    
+    public void RegistrarDetalleVenta(){
+        control_inventario.conexion cc = new conexion();
+        Connection cn=cc.conexion();
+            
+        int total_filas = jTable_Venta_Productos.getRowCount();
+        System.err.println(total_filas);
+        int valorActual = 0;
+        
+        for(int p =0; p<total_filas; p++){
+            String codigo = jTable_Venta_Productos.getValueAt(p, 0).toString();
+            String des = jTable_Venta_Productos.getValueAt(p, 1).toString();
+            String can = jTable_Venta_Productos.getValueAt(p, 2).toString();
+            String pre = jTable_Venta_Productos.getValueAt(p, 3).toString();
+            String tot = jTable_Venta_Productos.getValueAt(p, 4).toString();
+            
+            //----------------Restar la cantidad de producto--------------------
+            int canV = Integer.parseInt(can);
+            int canEx = 0;
+            String consulta = "select cantidad from producto where codigo = '"+codigo+"'";
+            
+            try {
+                Statement stcanex=cn.createStatement();
+                ResultSet rscanex=stcanex.executeQuery(consulta);
+                while(rscanex.next()){
+                    canEx = rscanex.getInt(1);
+                }
+                int nuevacan = canEx - canV;
+                
+                PreparedStatement pst=cn.prepareStatement("UPDATE producto SET cantidad=? WHERE codigo ="+codigo+"");
+                pst.setInt(1, nuevacan);
+                if(pst.executeUpdate() > 0){
+                    JOptionPane.showMessageDialog(null, "La cantidad han sido modificados con éxito", "Operación Exitosa", 
+                    JOptionPane.INFORMATION_MESSAGE);
+                }
+                
+            } catch (Exception e) {
+                System.out.println("Error: "+e);
+            }
+            //------------------------------------------------------------------
+            //-----------contador pra codigo de tabla detalle factura---------
+            String sql3 = "SELECT COUNT(*)+1 FROM factura";
+            
+            try {
+                Statement val = cn.createStatement();
+                ResultSet rsval = val.executeQuery(sql3);
+                
+                while(rsval.next()){
+                    valorActual = rsval.getInt(1);
+                }
+            } catch (Exception e) {
+                System.err.println("error al ejecutar consulta: " +e);
+            }
+            System.out.println("Valor actual: " + valorActual);
+            
+
+            //------------------------------------------------------------------
+            //--------------Agregar Producto a Tabla detalle Factura------------
+            int codigo_detalle_fac = valorActual;
+            try {
+                PreparedStatement insert_detalle_Fac = cn.prepareStatement("INSERT INTO detalle_factura(cog_detalle_fac, codigo, cantidadV, total) VALUES (?,?,?,?);");
+                insert_detalle_Fac.setInt(1, codigo_detalle_fac);
+                insert_detalle_Fac.setString(2, codigo);
+                insert_detalle_Fac.setString(3, can);
+                insert_detalle_Fac.setString(4, tot);
+                
+                int resultado_detalle_fac = insert_detalle_Fac.executeUpdate();
+                if(resultado_detalle_fac>0){
+                    JOptionPane.showMessageDialog(null,"Detalle Factura Registrada con exito");
+                }else{
+                    JOptionPane.showMessageDialog(null,"Error al agregar");
+                }
+                
+            } catch (Exception e) {
+               // System.err.println("Erro al ingresar: "+e);
+            }
+            //------------------------------------------------------------------
+            
+        }
+        
+        //-------------------Generar codigo Factura-------------------------
+                String CodigoFac = "";
+                String numFac = Integer.toString(valorActual);
+                if(valorActual<=9){
+                    CodigoFac = "000-000-00"+numFac;
+                }
+                else if(valorActual<=99){
+                    CodigoFac = "000-000-0"+numFac;
+                }
+                else if(valorActual<=999){
+                    CodigoFac = "000-000-"+numFac;
+                }
+                else if(valorActual<=9999){
+                    CodigoFac = "000-00"+numFac;
+                }
+                else if(valorActual<=99999){
+                    CodigoFac = "000-0"+numFac;
+                }
+                else if(valorActual<=999999){
+                    CodigoFac = "000-"+numFac;
+                }
+                else if(valorActual<=9999999){
+                    CodigoFac = "00"+numFac;
+                }
+                else if(valorActual<=99999999){
+                    CodigoFac = "0"+numFac;
+                }
+                else if(valorActual<=999999999){
+                    CodigoFac = numFac;
+                }
+            //------------------------------------------------------------------
+            
+            //----------------------Guardar Factura-----------------------------
+            try {
+                PreparedStatement insert_detalle_Fac = cn.prepareStatement("INSERT INTO factura(codigo_factura, cog_detalle_fac, identidad, total, fecha, hora) VALUES (?,?,?,?,?,?);");
+                insert_detalle_Fac.setString(1, CodigoFac);
+                insert_detalle_Fac.setString(2, numFac);
+                insert_detalle_Fac.setString(3, txt_id_vendedor.getText());
+                insert_detalle_Fac.setString(4, txt_total_pagar.getText());
+                insert_detalle_Fac.setString(5, txt_fecha_fac.getText());
+                insert_detalle_Fac.setString(6, txt_hora_fac.getText());
+                
+                int resultado_detalle_fac = insert_detalle_Fac.executeUpdate();
+                if(resultado_detalle_fac>0){
+                    JOptionPane.showMessageDialog(null,"Factura Registrada con exito");
+                }else{
+                    JOptionPane.showMessageDialog(null,"Error al agregar");
+                }
+                
+            } catch (Exception e) {
+                System.err.println("Erro al ingresar: "+e);
+            }
+            //------------------------------------------------------------------
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -141,6 +280,16 @@ public class Registrar_Ventas extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         txt_total_pagar = new javax.swing.JTextField();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
+        jTextField2 = new javax.swing.JTextField();
+        jLabel9 = new javax.swing.JLabel();
+        txt_fecha_fac = new javax.swing.JTextField();
+        txt_id_vendedor = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
+        txt_hora_fac = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -270,6 +419,11 @@ public class Registrar_Ventas extends javax.swing.JFrame {
         jLabel5.setToolTipText("");
 
         jButton1.setText("Realizar Compra");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Regresar");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -283,51 +437,130 @@ public class Registrar_Ventas extends javax.swing.JFrame {
 
         txt_total_pagar.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
 
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Otros datos"));
+
+        jLabel7.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel7.setText("Nombre Vendedor");
+
+        jLabel8.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel8.setText("Nombre del Cliente");
+
+        jTextField2.setText("null");
+
+        jLabel9.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel9.setText("Fecha");
+
+        txt_fecha_fac.setText("2020-07-05");
+
+        txt_id_vendedor.setText("1007-1998-5421");
+
+        jLabel10.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel10.setText("Hora");
+
+        txt_hora_fac.setText("16:50:20");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jTextField1)
+                        .addComponent(jLabel8)
+                        .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
+                        .addGroup(jPanel2Layout.createSequentialGroup()
+                            .addComponent(jLabel9)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel10)
+                            .addGap(29, 29, 29)))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel7)
+                        .addGap(18, 18, 18)
+                        .addComponent(txt_id_vendedor, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(txt_fecha_fac, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(36, 36, 36)
+                        .addComponent(txt_hora_fac)))
+                .addContainerGap(75, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(txt_id_vendedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9)
+                    .addComponent(jLabel10))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txt_fecha_fac, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txt_hora_fac, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(20, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jButton2)
-                .addGap(27, 27, 27)
-                .addComponent(jButton1)
-                .addGap(216, 216, 216))
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(181, 181, 181)
-                        .addComponent(jLabel5))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(444, 444, 444)
+                        .addContainerGap()
                         .addComponent(jLabel2)
                         .addGap(18, 18, 18)
                         .addComponent(txt_total_pagar, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGap(34, 34, 34)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jScrollPane1))))
-                .addContainerGap(67, Short.MAX_VALUE))
+                .addContainerGap(359, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jButton2)
+                        .addGap(62, 62, 62)
+                        .addComponent(jButton1)
+                        .addGap(142, 142, 142)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addGap(298, 298, 298))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(24, 24, 24)
+                .addGap(39, 39, 39)
                 .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 72, Short.MAX_VALUE)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(31, 31, 31)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
-                .addGap(18, 18, 18)
+                .addGap(39, 39, 39)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(46, 46, 46)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton1)
+                            .addComponent(jButton2)))
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(20, 20, 20)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(20, 20, 20)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(txt_total_pagar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(16, 16, 16))
+                    .addComponent(txt_total_pagar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
+                .addContainerGap(23, Short.MAX_VALUE))
         );
 
         pack();
@@ -358,13 +591,24 @@ public class Registrar_Ventas extends javax.swing.JFrame {
 
     private void txt_cantidad_ventaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_cantidad_ventaKeyReleased
         // TODO add your handling code here:
-        RevisarCantidad();
+        String cantidad_venta = txt_cantidad_venta.getText();
+        if("".equals(cantidad_venta)){
+            btb_Agregar_Producto.setEnabled(false);
+        }else{
+            btb_Agregar_Producto.setEnabled(true);
+            RevisarCantidad();
+        }
     }//GEN-LAST:event_txt_cantidad_ventaKeyReleased
 
     private void txt_des_ventaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_des_ventaKeyReleased
         // TODO add your handling code here:
         BuscarProducto();
     }//GEN-LAST:event_txt_des_ventaKeyReleased
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        RegistrarDetalleVenta();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -407,19 +651,29 @@ public class Registrar_Ventas extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable_Venta_Productos;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
     private javax.swing.JLabel jlabelUnidad;
     private javax.swing.JTextField txt_cantidad_existente;
     private javax.swing.JTextField txt_cantidad_venta;
     private javax.swing.JTextField txt_codigo_venta;
     private javax.swing.JTextField txt_des_venta;
+    private javax.swing.JTextField txt_fecha_fac;
+    private javax.swing.JTextField txt_hora_fac;
+    private javax.swing.JTextField txt_id_vendedor;
     private javax.swing.JTextField txt_precio_venta;
     private javax.swing.JTextField txt_total_pagar;
     // End of variables declaration//GEN-END:variables
