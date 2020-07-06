@@ -6,7 +6,6 @@
 package control_inventario.JFrame;
 
 import com.mysql.jdbc.PreparedStatement;
-import com.sun.tools.javac.Main;
 import control_inventario.Control_Inventario;
 import control_inventario.Control_Inventario.metod;
 import control_inventario.conexion;
@@ -70,8 +69,7 @@ public class InicioSesion extends javax.swing.JFrame {
         System.out.println("Serial almacenado:"+almING);
         
         if(almING.equals("12345")){
-            Main m=new Main();
-            
+            jButton1.setEnabled(false);
             
         }
         }  
@@ -92,8 +90,6 @@ public class InicioSesion extends javax.swing.JFrame {
         jLabel2.setForeground(colorGrisL);
         jLabel3.setForeground(colorGrisL);
     }
-    
-    
     public void Login(){
         String user = jTextField1.getText();
         String contra = jpass_contra_user.getText();
