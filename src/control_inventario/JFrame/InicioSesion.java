@@ -6,6 +6,9 @@
 package control_inventario.JFrame;
 
 import com.mysql.jdbc.PreparedStatement;
+import com.sun.tools.javac.Main;
+import control_inventario.Control_Inventario;
+import control_inventario.Control_Inventario.metod;
 import control_inventario.conexion;
 import control_inventario.conexionH;
 import java.awt.Color;
@@ -15,6 +18,7 @@ import java.io.FileWriter;
 import java.io.Serial;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
+import java.net.Socket;
 import java.sql.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,6 +26,7 @@ import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -33,7 +38,46 @@ public class InicioSesion extends javax.swing.JFrame {
      * Creates new form InicioSesion
      */
     public InicioSesion() {
+        int valorInt;
         initComponents();
+        metod llam=new metod();
+        llam.mensaje();
+        valorInt=llam.cubo();
+        System.out.println("Valot INT: "+valorInt);
+         macO p = new macO();//Llamar Función MAC
+        Mac=p.conseguirMAC();
+        
+        System.out.println("Mac es: "+Mac);
+        
+        if(valorInt==1111){
+       control_inventario.conexionH ccI = new conexionH(); //where nombre_user='"+user+"' and '"+contra+"'
+        Connection cnI = ccI.conexionH();
+        String serialING="SELECT serial FROM seriales where mac='"+Mac+"'";  
+        String almING="12345";
+        try {
+            
+            Statement st6=cnI.createStatement();
+            ResultSet rs6=st6.executeQuery(serialING);
+            
+            while(rs6.next()){
+                almING = rs6.getString(1);  
+            }
+            
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(InicioSesion.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+        System.out.println("Serial almacenado:"+almING);
+        
+        if(almING.equals("12345")){
+            Main m=new Main();
+            
+            
+        }
+        }  
+        
+        
+        
         
         this.setTitle("Inicio de sesión");
         Image ico= Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("img/icono.png"));
@@ -48,9 +92,13 @@ public class InicioSesion extends javax.swing.JFrame {
         jLabel2.setForeground(colorGrisL);
         jLabel3.setForeground(colorGrisL);
     }
+    
+    
     public void Login(){
         String user = jTextField1.getText();
         String contra = jpass_contra_user.getText();
+        
+     
         control_inventario.conexion cc = new conexion(); //where nombre_user='"+user+"' and '"+contra+"'
         Connection cn = cc.conexion();
         
@@ -266,7 +314,10 @@ public class InicioSesion extends javax.swing.JFrame {
     
 }
     //FIN OBTENER MAC
+    //VERIFICAR CONEXION
     
+    //FIN VERIFICAR CONEXION
+    String Mac;
     private void serialjbottomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_serialjbottomActionPerformed
         
         
@@ -320,6 +371,13 @@ public class InicioSesion extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+        //INICIO VERIFICAR CONEXION
+        
+        
+        
+        
+        
+        //FIN VERIFICAR CONEXION
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
