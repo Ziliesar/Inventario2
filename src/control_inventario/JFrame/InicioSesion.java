@@ -89,6 +89,8 @@ public class InicioSesion extends javax.swing.JFrame {
         jLabel1.setForeground(colorGrisL);
         jLabel2.setForeground(colorGrisL);
         jLabel3.setForeground(colorGrisL);
+
+        
     }
     public void Login(){
         String user = jTextField1.getText();
@@ -215,6 +217,7 @@ public class InicioSesion extends javax.swing.JFrame {
         jTextField1 = new javax.swing.JTextField();
         jpass_contra_user = new javax.swing.JPasswordField();
         jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
         serialjbottom = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
 
@@ -256,6 +259,14 @@ public class InicioSesion extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 190, -1, -1));
+
+        jButton3.setText("Conseguir serial");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 300, 130, 30));
 
         serialjbottom.setText("Serial");
         serialjbottom.addActionListener(new java.awt.event.ActionListener() {
@@ -389,6 +400,15 @@ public class InicioSesion extends javax.swing.JFrame {
         
     }//GEN-LAST:event_serialjbottomActionPerformed
 
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        try {
+        String url = "http://digitalpalace.net/";
+        java.awt.Desktop.getDesktop().browse(java.net.URI.create(url));
+    } catch (java.io.IOException e) {
+        System.out.println(e.getMessage());
+    }
+    }//GEN-LAST:event_jButton3ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -434,6 +454,7 @@ public class InicioSesion extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
