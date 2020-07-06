@@ -361,6 +361,32 @@ public class InicioSesion extends javax.swing.JFrame {
         } catch (Exception e) {
         }
         
+        ////
+        control_inventario.conexionH ccI = new conexionH(); //where nombre_user='"+user+"' and '"+contra+"'
+        Connection cnI = ccI.conexionH();
+        String macDB="SELECT mac FROM seriales where mac='"+Mac+"'";  
+        String macDB2="HHH";
+        try {
+            
+            Statement st7=cnI.createStatement();
+            ResultSet rs7=st7.executeQuery(macDB);
+            
+            while(rs7.next()){
+                macDB2 = rs7.getString(1);  
+                System.out.println("MACCCCCC222222: "+macDB2);
+            }
+            
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(InicioSesion.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+        
+        
+        if(Mac.equals(macDB2)){
+            jButton1.setEnabled(true);
+        }
+        
+        
     }//GEN-LAST:event_serialjbottomActionPerformed
 
     /**
