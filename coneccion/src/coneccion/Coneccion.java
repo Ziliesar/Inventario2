@@ -6,7 +6,6 @@ public class Coneccion {
     public static void main(String[] args) {
        String dirWeb = "www.digitalpalace.net";
         int puerto = 80;
-        
         try{
   Socket s = new Socket(dirWeb, puerto);
   
