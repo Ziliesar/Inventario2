@@ -80,6 +80,7 @@ public class Registrar_Ventas extends javax.swing.JFrame {
     }
     
     public void RevisarCantidad(){
+        System.out.println("Ingresando revisar valor");
         String cantidad_existente = txt_cantidad_existente.getText();
         String cantidad_venta = txt_cantidad_venta.getText();
         
@@ -251,6 +252,36 @@ public class Registrar_Ventas extends javax.swing.JFrame {
             }
             //------------------------------------------------------------------
     }
+    
+    public void EvaluarProductoRepetido(){
+        System.out.println("Ingresando revisar codigo producto");
+        String codigoBu = txt_codigo_venta.getText();
+        int igual = 0;
+        int total_filas = jTable_Venta_Productos.getRowCount();
+        
+        for(int a =0; a<total_filas; a++){
+            String codigo = jTable_Venta_Productos.getValueAt(a, 0).toString();
+            
+            if(codigoBu.equals(codigo)){
+                igual = 1;
+                a=total_filas+1;
+            }else{
+                igual = 0;
+            }
+            System.out.println("buscando: "+a);
+        }
+        if(igual==1){
+            btb_Agregar_Producto.setEnabled(false);
+        }else{
+            btb_Agregar_Producto.setEnabled(true);
+            
+            AgregarProducto();
+            Total();
+            limpiar();
+        }
+        
+        
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -307,6 +338,12 @@ public class Registrar_Ventas extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel1.setText("Codigo:");
+
+        txt_codigo_venta.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txt_codigo_ventaKeyReleased(evt);
+            }
+        });
 
         txt_des_venta.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseExited(java.awt.event.MouseEvent evt) {
@@ -466,15 +503,14 @@ public class Registrar_Ventas extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jTextField1)
-                        .addComponent(jLabel8)
-                        .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
-                        .addGroup(jPanel2Layout.createSequentialGroup()
-                            .addComponent(jLabel9)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel10)
-                            .addGap(29, 29, 29)))
+                    .addComponent(jTextField1)
+                    .addComponent(jLabel8)
+                    .addComponent(jTextField2)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel9)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel10)
+                        .addGap(29, 29, 29))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel7)
                         .addGap(18, 18, 18)
@@ -569,13 +605,14 @@ public class Registrar_Ventas extends javax.swing.JFrame {
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
         limpiar();
+        btb_Agregar_Producto.setEnabled(true);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void btb_Agregar_ProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btb_Agregar_ProductoActionPerformed
         // TODO add your handling code here:
-        AgregarProducto();
-        Total();
-        limpiar();
+        
+        EvaluarProductoRepetido();
+        
     }//GEN-LAST:event_btb_Agregar_ProductoActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -598,6 +635,8 @@ public class Registrar_Ventas extends javax.swing.JFrame {
             btb_Agregar_Producto.setEnabled(true);
             RevisarCantidad();
         }
+        
+        
     }//GEN-LAST:event_txt_cantidad_ventaKeyReleased
 
     private void txt_des_ventaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_des_ventaKeyReleased
@@ -609,6 +648,11 @@ public class Registrar_Ventas extends javax.swing.JFrame {
         // TODO add your handling code here:
         RegistrarDetalleVenta();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void txt_codigo_ventaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_codigo_ventaKeyReleased
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_txt_codigo_ventaKeyReleased
 
     /**
      * @param args the command line arguments
