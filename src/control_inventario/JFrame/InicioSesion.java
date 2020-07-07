@@ -51,6 +51,7 @@ public class InicioSesion extends javax.swing.JFrame {
     public InicioSesion() {
         int valorInt;
         initComponents();
+        
         metod llam=new metod();
         llam.mensaje();
         valorInt=llam.cubo();
@@ -101,6 +102,7 @@ public class InicioSesion extends javax.swing.JFrame {
         jLabel1.setForeground(colorGrisL);
         jLabel2.setForeground(colorGrisL);
         jLabel3.setForeground(colorGrisL);
+        
 
         
     }
@@ -237,17 +239,19 @@ public class InicioSesion extends javax.swing.JFrame {
         jButton3 = new javax.swing.JButton();
         serialjbottom = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
-        jLabel1.setText("Inicio de Sesión");
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(81, 24, -1, -1));
+        jLabel1.setText("Inicio de sesión");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 120, -1, -1));
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel2.setText("Nombre de Usuario:");
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(43, 101, -1, -1));
+        jLabel2.setText("Nombre de usuario:");
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 200, -1, -1));
 
         jButton1.setBackground(new java.awt.Color(215, 225, 229));
         jButton1.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
@@ -258,19 +262,19 @@ public class InicioSesion extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 190, -1, -1));
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 300, -1, -1));
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel3.setText("Contraseña:");
-        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(43, 143, -1, -1));
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 250, -1, -1));
 
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField1ActionPerformed(evt);
             }
         });
-        getContentPane().add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(219, 105, 145, -1));
-        getContentPane().add(jpass_contra_user, new org.netbeans.lib.awtextra.AbsoluteConstraints(219, 147, 145, -1));
+        getContentPane().add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 200, 145, -1));
+        getContentPane().add(jpass_contra_user, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 250, 145, -1));
 
         jButton2.setBackground(new java.awt.Color(219, 225, 229));
         jButton2.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
@@ -281,7 +285,7 @@ public class InicioSesion extends javax.swing.JFrame {
                 jButton2ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 190, -1, -1));
+        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 300, -1, -1));
 
         jButton3.setText("Conseguir serial");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -289,7 +293,7 @@ public class InicioSesion extends javax.swing.JFrame {
                 jButton3ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 300, 130, 30));
+        getContentPane().add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 390, 130, 30));
 
         serialjbottom.setText("Serial");
         serialjbottom.addActionListener(new java.awt.event.ActionListener() {
@@ -297,10 +301,17 @@ public class InicioSesion extends javax.swing.JFrame {
                 serialjbottomActionPerformed(evt);
             }
         });
-        getContentPane().add(serialjbottom, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 310, -1, -1));
+        getContentPane().add(serialjbottom, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 390, 70, 30));
 
-        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/control_inventario/JFrame/fondoI.JPG"))); // NOI18N
-        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 400, 350));
+        jLabel4.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/control_inventario/JFrame/cuadro.PNG"))); // NOI18N
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 110, 360, 240));
+
+        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/control_inventario/JFrame/logito.PNG"))); // NOI18N
+        getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 10, 100, 90));
+
+        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/control_inventario/JFrame/fondoinicio.jpg"))); // NOI18N
+        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 440, 450));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -492,6 +503,8 @@ String nombre;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     public static javax.swing.JTextField jTextField1;
     private javax.swing.JPasswordField jpass_contra_user;
     private javax.swing.JButton serialjbottom;
