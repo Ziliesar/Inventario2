@@ -9,6 +9,8 @@ import control_inventario.JFrame.InicioSesion;
 import control_inventario.JFrame.Menu;
 import control_inventario.JFrame.Registrar_Personal;
 import java.net.Socket;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class Control_Inventario {
@@ -50,22 +52,10 @@ public int cubo () {
 
 
    
-    public static void main(String[] args) {
-        
-        
-        
+    public static void main(String[] args) {      
         control_inventario.JFrame.InicioSesion sesion = new InicioSesion();
         sesion.setVisible(true);
         
         
-        
-        
-      
-            
-    }
-        
-        
-        
-    }
-    
-
+    }      
+}

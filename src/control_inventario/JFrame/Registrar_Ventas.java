@@ -11,14 +11,23 @@ import control_inventario.conexionH;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -27,6 +36,9 @@ import javax.swing.table.DefaultTableModel;
  */
 public class Registrar_Ventas extends javax.swing.JFrame {
 
+    
+    
+    
     /**
      * Creates new form Registrar_Ventas
      */
@@ -34,10 +46,88 @@ public class Registrar_Ventas extends javax.swing.JFrame {
     Object[] llenar = new Object[5];
     String nombreU;
   public static  String usuarioRE;
+    public static  String horaS, minutos, segundos;
+    public static  int horaSA, minutosA, segundosA;
+  //METODO INICIAL
+  public static String fecha;
+  public static String hora;
+  public static String fecha(){
+      Calendar c1 = Calendar.getInstance();
+        Calendar c2 = new GregorianCalendar();
+        
+        String dia = Integer.toString(c1.get(Calendar.DATE));
+        if(dia.equals("1")||dia.equals("2")||dia.equals("3")||dia.equals("4")||dia.equals("5")||dia.equals("6")||
+                dia.equals("7")||dia.equals("8")||dia.equals("9")){
+            dia="0"+dia;
+        }
+        String mes = Integer.toString(c1.get(Calendar.MONTH));
+        
+        int mes2=Integer.parseInt(mes);
+        mes2=mes2+1;
+        mes=Integer.toString(mes2);
+        if(mes.equals("1")||mes.equals("2")||mes.equals("3")||mes.equals("4")||mes.equals("5")||mes.equals("6")||
+                mes.equals("7")||mes.equals("8")||mes.equals("9")){
+            mes="0"+mes;
+        }
+        String annio = Integer.toString(c1.get(Calendar.YEAR));
+        fecha=annio+"-"+mes+"-"+dia;
+      return fecha;
+  }
+  public static String hora(){
+      Calendar calendario = Calendar.getInstance();
+      
+      horaSA =calendario.get(Calendar.HOUR_OF_DAY);
+      horaS=Integer.toString(horaSA);
+      if(horaS.equals("0")||horaS.equals("1")||horaS.equals("2")||horaS.equals("3")||horaS.equals("4")||horaS.equals("5")||horaS.equals("6")||
+                horaS.equals("7")||horaS.equals("8")||horaS.equals("9")){
+            horaS="0"+horaS;
+        }
+      
+      minutosA = calendario.get(Calendar.MINUTE);
+      minutos=Integer.toString(minutosA);
+      if(minutos.equals("0")||minutos.equals("1")||minutos.equals("2")||minutos.equals("3")||minutos.equals("4")||minutos.equals("5")||minutos.equals("6")||
+                minutos.equals("7")||minutos.equals("8")||minutos.equals("9")){
+            minutos="0"+minutos;
+        }
+      
+      segundosA = calendario.get(Calendar.SECOND);
+      segundos=Integer.toString(segundosA);
+      if(segundos.equals("0")||segundos.equals("1")||segundos.equals("2")||segundos.equals("3")||segundos.equals("4")||segundos.equals("5")||segundos.equals("6")||
+                segundos.equals("7")||segundos.equals("8")||segundos.equals("9")){
+            segundos="0"+segundos;
+        }
+      hora=horaS+":"+minutos+":"+segundos;
+      System.out.println("HORA: "+hora);
+      
+      
+      
+      
+      return hora;
+  }
+  //TIEMPO
+ 
+  
+  //FIN TIEMPO
+  
+  public static void agregarH(){
+            txt_hora_fac.setText(hora());
+            txt_fecha_fac.setText(fecha());
+        }
     public Registrar_Ventas() {
+        
+        
         initComponents();
         txt_total_pagar.setEditable(false);
         tablaV = (DefaultTableModel) jTable_Venta_Productos.getModel();
+        
+        
+        txt_fecha_fac.setEditable(false);
+        txt_hora_fac.setEditable(false);
+        
+        agregarH();
+        
+        
+        
         
         InicioSesion llam23=new InicioSesion();
        usuarioRE=llam23.conseguirN();
@@ -113,6 +203,19 @@ public class Registrar_Ventas extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         Color colorAzulF=new Color(20, 63, 82);//AZULDE FONDO
         Color colorGrisL=new Color(215, 225, 229);//LETRAS
+        
+        
+        java.util.Timer timer=new java.util.Timer();
+        
+        TimerTask tarea=new TimerTask(){
+            @Override
+            public void run() {                                
+                hora();
+                agregarH();
+            }            
+        };
+        timer.schedule(tarea, 0, 1000);
+        
     }
     
     void BuscarProducto(){
@@ -407,6 +510,7 @@ public class Registrar_Ventas extends javax.swing.JFrame {
         jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
+        jLabel17 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
@@ -604,8 +708,6 @@ public class Registrar_Ventas extends javax.swing.JFrame {
         jLabel9.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel9.setText("Fecha");
 
-        txt_fecha_fac.setText("2020-07-05");
-
         txt_id_vendedor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txt_id_vendedorActionPerformed(evt);
@@ -615,7 +717,11 @@ public class Registrar_Ventas extends javax.swing.JFrame {
         jLabel10.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel10.setText("Hora");
 
-        txt_hora_fac.setText("16:50:20");
+        txt_hora_fac.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_hora_facActionPerformed(evt);
+            }
+        });
 
         jLabel12.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel12.setText("Nombre completo:");
@@ -648,33 +754,38 @@ public class Registrar_Ventas extends javax.swing.JFrame {
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField2)
                             .addComponent(recibir1)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
-                                        .addComponent(jLabel9)
-                                        .addGap(106, 106, 106)
-                                        .addComponent(jLabel10))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
-                                        .addComponent(txt_fecha_fac, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(36, 36, 36)
-                                        .addComponent(txt_hora_fac, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
-                                        .addGap(75, 75, 75)
-                                        .addComponent(jLabel7))
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addComponent(jLabel8)
-                                        .addGap(40, 40, 40)))
-                                .addGap(0, 37, Short.MAX_VALUE))
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(jLabel13)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(txt_id_vendedor))
-                            .addComponent(jLabel14)
-                            .addComponent(jLabel15)
-                            .addComponent(jTextField1))
+                            .addComponent(jTextField1)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                                            .addComponent(jLabel9)
+                                            .addGap(106, 106, 106)
+                                            .addComponent(jLabel10))
+                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                                            .addComponent(txt_fecha_fac, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGap(36, 36, 36)
+                                            .addComponent(txt_hora_fac, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                                            .addGap(75, 75, 75)
+                                            .addComponent(jLabel7))
+                                        .addGroup(jPanel2Layout.createSequentialGroup()
+                                            .addComponent(jLabel8)
+                                            .addGap(40, 40, 40)))
+                                    .addComponent(jLabel14)
+                                    .addComponent(jLabel15))
+                                .addGap(0, 37, Short.MAX_VALUE))
+                            .addComponent(jTextField2))
                         .addGap(38, 38, 38))))
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(124, 124, 124)
+                .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -698,7 +809,9 @@ public class Registrar_Ventas extends javax.swing.JFrame {
                 .addComponent(jLabel15)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 163, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 90, Short.MAX_VALUE)
+                .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(29, 29, 29)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
                     .addComponent(jLabel10))
@@ -782,6 +895,10 @@ public class Registrar_Ventas extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
 
+    private void txt_hora_facActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_hora_facActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_hora_facActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -830,6 +947,7 @@ public class Registrar_Ventas extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -850,8 +968,8 @@ public class Registrar_Ventas extends javax.swing.JFrame {
     private javax.swing.JTextField txt_cantidad_venta;
     private javax.swing.JTextField txt_codigo_venta;
     private javax.swing.JTextField txt_des_venta;
-    private javax.swing.JTextField txt_fecha_fac;
-    private javax.swing.JTextField txt_hora_fac;
+    public static javax.swing.JTextField txt_fecha_fac;
+    public static javax.swing.JTextField txt_hora_fac;
     private javax.swing.JTextField txt_id_vendedor;
     private javax.swing.JTextField txt_precio_venta;
     private javax.swing.JTextField txt_total_pagar;
