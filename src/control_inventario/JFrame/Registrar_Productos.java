@@ -101,6 +101,45 @@ public final class Registrar_Productos extends javax.swing.JFrame {
         }
     }
     
+    void BusquedaCodigo(String codi){
+        DefaultTableModel modelo=new DefaultTableModel();
+       
+        modelo.addColumn("Codigo");
+        modelo.addColumn("Descripcion");
+        modelo.addColumn("Unidad");
+        modelo.addColumn("cantidad");
+        modelo.addColumn("Precio Compra");
+        modelo.addColumn("Precio Venta");
+        modelo.addColumn("Area Producto");
+          
+        jTable_productos.setModel(modelo);
+        String sql="";
+       
+        sql="SELECT pd.codigo, pd.descripcion, uni.unidad, pd.cantidad, pd.precio_compra, pd.precio_venta, apd.area_producto\n" +
+            "FROM producto pd INNER JOIN tipo_unidad uni on pd.id_unidad=uni.id_unidad INNER JOIN areas_productos apd on pd.id_area_producto=apd.id_area_producto where pd.codigo ='"+codi+"'";
+     
+        
+        String []datos=new String [7];
+        try{
+            Statement st=cn.createStatement();
+            ResultSet rs=st.executeQuery(sql);
+            while(rs.next()){
+            datos[0]=rs.getString(1);
+            datos[1]=rs.getString(2);
+            datos[2]=rs.getString(3);
+            datos[3]=rs.getString(4);
+            datos[4]=rs.getString(5);
+            datos[5]=rs.getString(6);
+            datos[6]=rs.getString(7);
+            
+            modelo.addRow(datos);
+            }
+            jTable_productos.setModel(modelo);
+        }catch(SQLException ex){
+            Logger.getLogger(Registrar_Productos.class.getName()).log(Level.SEVERE,null,ex);
+        }
+    }
+    
     public void RegistrarProductos(){
         int error = 0;
         String mensaje = "";
@@ -265,6 +304,8 @@ public final class Registrar_Productos extends javax.swing.JFrame {
         jButton4 = new javax.swing.JButton();
         jLabel10 = new javax.swing.JLabel();
         jComboBox2 = new javax.swing.JComboBox<>();
+        jLabel3 = new javax.swing.JLabel();
+        txt_busqueda_codigo = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
 
         jMenuItem1.setText("Seleccionar");
@@ -340,7 +381,7 @@ public final class Registrar_Productos extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 340, -1, -1));
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 360, -1, -1));
 
         jButton2.setText("Actualizar");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -348,7 +389,7 @@ public final class Registrar_Productos extends javax.swing.JFrame {
                 jButton2ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 340, -1, -1));
+        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 360, -1, -1));
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel8.setText("Área producto:");
@@ -375,16 +416,30 @@ public final class Registrar_Productos extends javax.swing.JFrame {
                 jButton4ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 340, -1, -1));
+        getContentPane().add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 360, -1, -1));
 
         jLabel10.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel10.setText("Unidad:");
         getContentPane().add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 250, -1, -1));
 
-        getContentPane().add(jComboBox2, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 250, 160, -1));
+        getContentPane().add(jComboBox2, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 250, 220, -1));
+
+        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel3.setText("Busqueda de Producto");
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 360, -1, -1));
+
+        txt_busqueda_codigo.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_busqueda_codigoKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txt_busqueda_codigoKeyReleased(evt);
+            }
+        });
+        getContentPane().add(txt_busqueda_codigo, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 360, 130, -1));
 
         jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/control_inventario/JFrame/fondoR.jpg"))); // NOI18N
-        getContentPane().add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 800, 670));
+        getContentPane().add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -20, 800, 720));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -443,6 +498,22 @@ public final class Registrar_Productos extends javax.swing.JFrame {
         limpiar();
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    private void txt_busqueda_codigoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_busqueda_codigoKeyReleased
+        // TODO add your handling code here:
+        String cdg = txt_busqueda_codigo.getText();
+        if("".equals(cdg)){
+            mostrarProductos();
+        }else{
+            BusquedaCodigo(cdg);
+        }
+            
+        
+    }//GEN-LAST:event_txt_busqueda_codigoKeyReleased
+
+    private void txt_busqueda_codigoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_busqueda_codigoKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_busqueda_codigoKeyPressed
+
     /**
      * @param args the command line arguments
      */
@@ -488,6 +559,7 @@ public final class Registrar_Productos extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
@@ -500,6 +572,7 @@ public final class Registrar_Productos extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable_productos;
     private javax.swing.JTextArea txtA_descripcion;
+    private javax.swing.JTextField txt_busqueda_codigo;
     private javax.swing.JTextField txt_cantidad;
     private javax.swing.JTextField txt_codigo;
     private javax.swing.JTextField txt_precio_venta;
