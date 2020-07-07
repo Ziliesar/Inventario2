@@ -31,11 +31,23 @@ import javax.swing.SwingUtilities;
  *
  * @author arlir
  */
-public class InicioSesion extends javax.swing.JFrame {
 
+public class InicioSesion extends javax.swing.JFrame {
+    String usuarioA;
+    public static String x;
+    public static String usuarioB;
+     
+    public String conseguirN () {
+        String x;
+        
+        x=usuarioB;   
+        return x;
+    }
     /**
      * Creates new form InicioSesion
      */
+    
+    
     public InicioSesion() {
         int valorInt;
         initComponents();
@@ -92,11 +104,12 @@ public class InicioSesion extends javax.swing.JFrame {
 
         
     }
+    String user2a;
     public void Login(){
-        String user = jTextField1.getText();
+         String user = jTextField1.getText();
         String contra = jpass_contra_user.getText();
         
-     
+        
         control_inventario.conexion cc = new conexion(); //where nombre_user='"+user+"' and '"+contra+"'
         Connection cn = cc.conexion();
         
@@ -124,9 +137,12 @@ public class InicioSesion extends javax.swing.JFrame {
             
             while(rs.next()){
                 String usn = rs.getString(1);
+               
+                
                 if(usn.equals(user)){
                     //System.out.println("Bienvenido");
                     paseuser = 1;
+                    
                 }
             }
             
@@ -201,6 +217,7 @@ public class InicioSesion extends javax.swing.JFrame {
         
     }
 
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -246,6 +263,12 @@ public class InicioSesion extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel3.setText("Contraseña:");
         getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(43, 143, -1, -1));
+
+        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField1ActionPerformed(evt);
+            }
+        });
         getContentPane().add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(219, 105, 145, -1));
         getContentPane().add(jpass_contra_user, new org.netbeans.lib.awtextra.AbsoluteConstraints(219, 147, 145, -1));
 
@@ -284,6 +307,12 @@ public class InicioSesion extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        usuarioB=jTextField1.getText();
+       
+        String pp123;
+        pp123=conseguirN();
+        System.out.println("PROBANDOBBBBBBBB: "+pp123);
+        
         Login();
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -408,6 +437,10 @@ public class InicioSesion extends javax.swing.JFrame {
         System.out.println(e.getMessage());
     }
     }//GEN-LAST:event_jButton3ActionPerformed
+String nombre; 
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+       
+    }//GEN-LAST:event_jTextField1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -459,7 +492,7 @@ public class InicioSesion extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JTextField jTextField1;
+    public static javax.swing.JTextField jTextField1;
     private javax.swing.JPasswordField jpass_contra_user;
     private javax.swing.JButton serialjbottom;
     // End of variables declaration//GEN-END:variables

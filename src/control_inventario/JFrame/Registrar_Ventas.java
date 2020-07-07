@@ -5,7 +5,9 @@
  */
 package control_inventario.JFrame;
 
+import control_inventario.Control_Inventario;
 import control_inventario.conexion;
+import control_inventario.conexionH;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -27,10 +29,77 @@ public class Registrar_Ventas extends javax.swing.JFrame {
      */
     DefaultTableModel tablaV;
     Object[] llenar = new Object[5];
+    String nombreU;
+  public static  String usuarioRE;
     public Registrar_Ventas() {
         initComponents();
         txt_total_pagar.setEditable(false);
         tablaV = (DefaultTableModel) jTable_Venta_Productos.getModel();
+        
+        InicioSesion llam23=new InicioSesion();
+       usuarioRE=llam23.conseguirN();
+        //OBTENER IDENTIDAD
+        control_inventario.conexion cc8 = new conexion(); //where nombre_user='"+user+"' and '"+contra+"'
+        Connection cn8 = cc8.conexion();
+        String identBD8="SELECT identidad FROM usuario where nombre_user='"+usuarioRE+"'";  
+        String identBD8a="HHH";
+        try {
+            
+            Statement st8=cn8.createStatement();
+            ResultSet rs8=st8.executeQuery(identBD8);
+            
+            while(rs8.next()){
+                identBD8a = rs8.getString(1);  
+            }
+            
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(InicioSesion.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+        
+        //OBTENER NOMBRES
+        control_inventario.conexion cc9 = new conexion(); //where nombre_user='"+user+"' and '"+contra+"'
+        Connection cn9 = cc9.conexion();
+        String nombreBD9="SELECT nombres FROM personal where identidad='"+identBD8a+"'";  
+        String nombreBD9a="HHH";
+        try {
+            
+            Statement st9=cn9.createStatement();
+            ResultSet rs9=st9.executeQuery(nombreBD9);
+            
+            while(rs9.next()){
+                nombreBD9a = rs9.getString(1);  
+            }
+            
+          
+        } catch (SQLException ex) {
+            Logger.getLogger(InicioSesion.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+        //OBTENER APELLIDOS
+        control_inventario.conexion cc10 = new conexion(); //where nombre_user='"+user+"' and '"+contra+"'
+        Connection cn10 = cc10.conexion();
+        String apellBD10="SELECT apellidos FROM personal where identidad='"+identBD8a+"'";  
+        String apellBD10a="HHH";
+        try {
+            
+            Statement st10=cn10.createStatement();
+            ResultSet rs10=st10.executeQuery(apellBD10);
+            
+            while(rs10.next()){
+                apellBD10a = rs10.getString(1);  
+            }
+            
+          
+        } catch (SQLException ex) {
+            Logger.getLogger(InicioSesion.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+        
+        
+        
+        txt_id_vendedor.setText(identBD8a);
+        recibir1.setText(nombreBD9a+" "+apellBD10a);
+        txt_id_vendedor.setEditable(false);
+        recibir1.setEditable(false);
     }
     
     void BuscarProducto(){
@@ -313,7 +382,7 @@ public class Registrar_Ventas extends javax.swing.JFrame {
         txt_total_pagar = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        recibir1 = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
         jTextField2 = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
@@ -477,7 +546,13 @@ public class Registrar_Ventas extends javax.swing.JFrame {
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Otros datos"));
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel7.setText("Nombre Vendedor");
+        jLabel7.setText("Datos del Vendedor");
+
+        recibir1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                recibir1ActionPerformed(evt);
+            }
+        });
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel8.setText("Nombre del Cliente");
@@ -489,7 +564,11 @@ public class Registrar_Ventas extends javax.swing.JFrame {
 
         txt_fecha_fac.setText("2020-07-05");
 
-        txt_id_vendedor.setText("1007-1998-5421");
+        txt_id_vendedor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_id_vendedorActionPerformed(evt);
+            }
+        });
 
         jLabel10.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel10.setText("Hora");
@@ -503,23 +582,24 @@ public class Registrar_Ventas extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jTextField1)
-                    .addComponent(jLabel8)
-                    .addComponent(jTextField2)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel9)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel10)
-                        .addGap(29, 29, 29))
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jLabel8)
+                        .addComponent(jTextField2)
+                        .addGroup(jPanel2Layout.createSequentialGroup()
+                            .addComponent(jLabel9)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel10)
+                            .addGap(29, 29, 29))
+                        .addGroup(jPanel2Layout.createSequentialGroup()
+                            .addComponent(txt_fecha_fac, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(36, 36, 36)
+                            .addComponent(txt_hora_fac, javax.swing.GroupLayout.DEFAULT_SIZE, 94, Short.MAX_VALUE)))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel7)
                         .addGap(18, 18, 18)
-                        .addComponent(txt_id_vendedor, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(txt_fecha_fac, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(36, 36, 36)
-                        .addComponent(txt_hora_fac)))
-                .addContainerGap(75, Short.MAX_VALUE))
+                        .addComponent(txt_id_vendedor, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(recibir1))
+                .addContainerGap(38, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -529,7 +609,7 @@ public class Registrar_Ventas extends javax.swing.JFrame {
                     .addComponent(jLabel7)
                     .addComponent(txt_id_vendedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(recibir1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel8)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -609,7 +689,7 @@ public class Registrar_Ventas extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void btb_Agregar_ProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btb_Agregar_ProductoActionPerformed
-        // TODO add your handling code here:
+      
         
         EvaluarProductoRepetido();
         
@@ -653,6 +733,14 @@ public class Registrar_Ventas extends javax.swing.JFrame {
         // TODO add your handling code here:
         
     }//GEN-LAST:event_txt_codigo_ventaKeyReleased
+
+    private void txt_id_vendedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_id_vendedorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_id_vendedorActionPerformed
+
+    private void recibir1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_recibir1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_recibir1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -708,9 +796,9 @@ public class Registrar_Ventas extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable_Venta_Productos;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JLabel jlabelUnidad;
+    public static javax.swing.JTextField recibir1;
     private javax.swing.JTextField txt_cantidad_existente;
     private javax.swing.JTextField txt_cantidad_venta;
     private javax.swing.JTextField txt_codigo_venta;

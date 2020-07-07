@@ -49,6 +49,7 @@ public class Menu extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        jButton4 = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
@@ -104,6 +105,14 @@ public class Menu extends javax.swing.JFrame {
         jLabel3.setToolTipText("");
         jLabel3.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
         getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(308, 230, 140, 15));
+
+        jButton4.setText("jButton4");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(173, 263, 90, 50));
 
         jLabel4.setBackground(new java.awt.Color(215, 225, 229));
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 48)); // NOI18N
@@ -203,7 +212,14 @@ public class Menu extends javax.swing.JFrame {
         // TODO add your handling code here:
         Registrar_Ventas regisV = new Registrar_Ventas();
         regisV.setVisible(true);
+        
     }//GEN-LAST:event_jMenuItem4ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        Registrar_Ventas regisVen = new Registrar_Ventas();
+        regisVen.setVisible(true);
+        dispose();  
+    }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -244,6 +260,7 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
