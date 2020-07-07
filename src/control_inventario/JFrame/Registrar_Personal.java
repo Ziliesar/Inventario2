@@ -31,7 +31,8 @@ import javax.swing.ImageIcon;
  */
 public class Registrar_Personal extends javax.swing.JFrame {
     
-   
+        control_inventario.conexion cc = new conexion();
+        Connection cn=cc.conexion();
 
     /**
      * Creates new form Registrar_Personal
@@ -55,7 +56,6 @@ public class Registrar_Personal extends javax.swing.JFrame {
         jLabel2.setForeground(colorGrisL);
         jLabel3.setForeground(colorGrisL);
         jLabel4.setForeground(colorGrisL);
-        jLabel5.setForeground(colorGrisL);
         jLabel6.setForeground(colorGrisL);
         jLabel7.setForeground(colorGrisL);
         jLabel8.setForeground(colorGrisL);
@@ -64,25 +64,21 @@ public class Registrar_Personal extends javax.swing.JFrame {
     }
     
     void mostrarPersonal(){
-        control_inventario.conexion cc = new conexion();
-        Connection cn = cc.conexion();
         DefaultTableModel modelo=new DefaultTableModel();
        
         modelo.addColumn("Id");
         modelo.addColumn("Nombre");
         modelo.addColumn("Apellodos");
-        modelo.addColumn("Correo");
         modelo.addColumn("Nombre Usuario");
-        modelo.addColumn("Contraseña Usuario");
         modelo.addColumn("Cargo");
           
         jtable_personal.setModel(modelo);
         String sql="";
        
-        sql="SELECT per.identidad, per.nombres, per.apellidos, per.correo, us.nombre_user, us.contra_user, car.cargo FROM personal per INNER JOIN usuario us on per.identidad=us.identidad INNER JOIN cargo car on per.id_cargo=car.id_cargo";
+        sql="SELECT per.identidad, per.nombres, per.apellidos, us.nombre_user, car.cargo FROM personal per INNER JOIN usuario us on per.identidad=us.identidad INNER JOIN cargo car on per.id_cargo=car.id_cargo";
      
         
-        String []datos=new String [7];
+        String []datos=new String [5];
         try{
             Statement st=cn.createStatement();
             ResultSet rs=st.executeQuery(sql);
@@ -92,8 +88,6 @@ public class Registrar_Personal extends javax.swing.JFrame {
             datos[2]=rs.getString(3);
             datos[3]=rs.getString(4);
             datos[4]=rs.getString(5);
-            datos[5]=rs.getString(6);
-            datos[6]=rs.getString(7);
             
             modelo.addRow(datos);
             }
@@ -103,31 +97,59 @@ public class Registrar_Personal extends javax.swing.JFrame {
         }
     }
     
+    public void limpiar(){
+        txt_id.setText("");
+        txt_nombres.setText("");
+        txt_apellidos.setText("");
+        txt_user.setText("");
+        txt_contra.setText("");
+    }
+    
     public void RegistrarPersonal(){
-        control_inventario.conexion cc = new conexion();
-        Connection cn=cc.conexion();
-        try{
-            int idCargo;
-            idCargo = jComboBox1.getItemAt(jComboBox1.getSelectedIndex()).getIdCargo(); 
-            
-            PreparedStatement pst=cn.prepareStatement("INSERT INTO personal(identidad, nombres, apellidos, correo, id_cargo) VALUES(?,?,?,?,?)");
-            pst.setString(1,txt_id.getText());
-            pst.setString(2,txt_nombres.getText());
-            pst.setString(3,txt_apellidos.getText());
-            pst.setString(4,txt_correo.getText());
-            pst.setInt(5, idCargo);
-
+        String id, nombres, apellidos;
+        int error = 0;
         
-        int a=pst.executeUpdate();
-        if(a>0){
-            JOptionPane.showMessageDialog(null,"Registro exitoso");
-             mostrarPersonal();
+        id = txt_id.getText();
+        nombres = txt_nombres.getText();
+        apellidos = txt_apellidos.getText();
+        if("".equals(id)){
+            error = 1;
+        }
+        else if("".equals(nombres)){
+            error = 2;
+        }
+        else if("".equals(apellidos)){
+            error = 3;
+        }
+         
+        if(error==0){
+            try{
+                int idCargo;
+                idCargo = jComboBox1.getItemAt(jComboBox1.getSelectedIndex()).getIdCargo(); 
+
+                PreparedStatement pst=cn.prepareStatement("INSERT INTO personal(identidad, nombres, apellidos, id_cargo) VALUES(?,?,?,?)");
+                pst.setString(1, id);
+                pst.setString(2, nombres);
+                pst.setString(3, apellidos);
+                pst.setInt(4, idCargo);
+
+
+            int a=pst.executeUpdate();
+            if(a>0){
+                JOptionPane.showMessageDialog(null,"Registro exitoso");
+                 mostrarPersonal();
+                 limpiar();
+            }
+            else{
+                 JOptionPane.showMessageDialog(null,"Error al agregar");
+            }
+            }catch(Exception e){
+            }
         }
         else{
-             JOptionPane.showMessageDialog(null,"Error al agregar");
+            JOptionPane.showMessageDialog(null,"Asegurese de llenar todos los campos");
         }
-        }catch(Exception e){
-        } 
+         
     }
     
     public void RegistrarUsuario(){
@@ -170,11 +192,9 @@ public class Registrar_Personal extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
         txt_id = new javax.swing.JTextField();
         txt_nombres = new javax.swing.JTextField();
         txt_apellidos = new javax.swing.JTextField();
-        txt_correo = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         txt_user = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
@@ -185,6 +205,7 @@ public class Registrar_Personal extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         jtable_personal = new javax.swing.JTable();
         jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
         jLabel10 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -205,14 +226,9 @@ public class Registrar_Personal extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel4.setText("Apellidos:");
         getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 227, -1, -1));
-
-        jLabel5.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel5.setText("Correo");
-        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 280, -1, -1));
         getContentPane().add(txt_id, new org.netbeans.lib.awtextra.AbsoluteConstraints(192, 130, 145, -1));
         getContentPane().add(txt_nombres, new org.netbeans.lib.awtextra.AbsoluteConstraints(192, 177, 145, -1));
         getContentPane().add(txt_apellidos, new org.netbeans.lib.awtextra.AbsoluteConstraints(192, 231, 145, -1));
-        getContentPane().add(txt_correo, new org.netbeans.lib.awtextra.AbsoluteConstraints(192, 284, 145, -1));
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel6.setText("Identidad:");
@@ -261,7 +277,15 @@ public class Registrar_Personal extends javax.swing.JFrame {
                 jButton2ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 330, 90, 40));
+        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 330, 90, 40));
+
+        jButton3.setText("Limpiar");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 330, 90, 40));
 
         jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/control_inventario/JFrame/fond2.JPG"))); // NOI18N
         jLabel10.setText("jLabel10");
@@ -290,6 +314,11 @@ public class Registrar_Personal extends javax.swing.JFrame {
         me.setVisible(true);
         dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        limpiar();
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -332,13 +361,13 @@ public class Registrar_Personal extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JComboBox<cargo> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
@@ -346,7 +375,6 @@ public class Registrar_Personal extends javax.swing.JFrame {
     private javax.swing.JTable jtable_personal;
     private javax.swing.JTextField txt_apellidos;
     private javax.swing.JPasswordField txt_contra;
-    private javax.swing.JTextField txt_correo;
     private javax.swing.JTextField txt_id;
     private javax.swing.JTextField txt_nombres;
     private javax.swing.JTextField txt_user;
