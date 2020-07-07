@@ -26,6 +26,8 @@ import javax.swing.table.DefaultTableModel;
  * @author arlir
  */
 public final class Registrar_Productos extends javax.swing.JFrame {
+        control_inventario.conexion cc = new conexion();
+        Connection cn=cc.conexion();
 
     /**
      * Creates new form Registrar_Productos
@@ -33,6 +35,7 @@ public final class Registrar_Productos extends javax.swing.JFrame {
     public Registrar_Productos() {
         initComponents();
         mostrarProductos();
+        jButton2.setEnabled(false);
         
         control_inventario.area_productos arp = new area_productos();
         arp.mostrarAreaProducto(jComboBox1);
@@ -60,8 +63,6 @@ public final class Registrar_Productos extends javax.swing.JFrame {
     }
     
     void mostrarProductos(){
-        control_inventario.conexion cc = new conexion();
-        Connection cn = cc.conexion();
         DefaultTableModel modelo=new DefaultTableModel();
        
         modelo.addColumn("Codigo");
@@ -101,33 +102,134 @@ public final class Registrar_Productos extends javax.swing.JFrame {
     }
     
     public void RegistrarProductos(){
-        control_inventario.conexion cc = new conexion();
-        Connection cn=cc.conexion();
-        try{
-            int idArea, idUnidad;
-            idArea = jComboBox1.getItemAt(jComboBox1.getSelectedIndex()).getId_area_producto(); 
-            idUnidad = jComboBox2.getItemAt(jComboBox2.getSelectedIndex()).getId_unidad();
-            
-            PreparedStatement pst=cn.prepareStatement("INSERT INTO producto(codigo, descripcion, id_unidad, cantidad, precio_compra, precio_venta, id_area_producto) VALUES(?,?,?,?,?,?,?)");
-            pst.setString(1,txt_codigo.getText());
-            pst.setString(2,txtA_descripcion.getText());
-            pst.setInt(3, idUnidad);
-            pst.setString(4,txt_cantidad.getText());
-            pst.setString(5, txtx_precio_compra.getText());
-            pst.setString(6, txt_precio_venta.getText());
-            pst.setInt(7, idArea);
-
+        int error = 0;
+        String mensaje = "";
+        String codigo = txt_codigo.getText();
+        String decrip = txtA_descripcion.getText();
         
-        int a=pst.executeUpdate();
-        if(a>0){
-            JOptionPane.showMessageDialog(null,"Producto Registro con exito");
-             mostrarProductos();
+        int idArea, idUnidad;
+        idArea = jComboBox1.getItemAt(jComboBox1.getSelectedIndex()).getId_area_producto(); 
+        idUnidad = jComboBox2.getItemAt(jComboBox2.getSelectedIndex()).getId_unidad();
+        
+        String can = txt_cantidad.getText();
+        String preciocompra = txtx_precio_compra.getText();
+        String preciventa = txt_precio_venta.getText();
+        
+        //----------------comprovar si codigo ya existe-------------------------
+        String codEx = "select codigo from producto where codigo='"+codigo+"'";
+        String codigoEx = "";
+        try {
+            Statement stcodigo=cn.createStatement();
+            ResultSet rscodigo=stcodigo.executeQuery(codEx);
+            
+            while(rscodigo.next()){
+                codigoEx = rscodigo.getString(1);
+            }
+        } catch (Exception e) {
         }
-        else{
-             JOptionPane.showMessageDialog(null,"Error al agregar");
+        if(codigo.equals(codigoEx)){
+            error = 6;
         }
-        }catch(Exception e){
-        } 
+        
+        //----------------------------------------------------------------------
+        else if(codigo.equals("")){
+            error = 1;
+            mensaje = "el codigo";
+        }
+        else if(decrip.equals("")){
+            error = 2;
+            mensaje = "la descripcion";
+        }
+        else if(can.equals("")){
+            error = 3;
+            mensaje = "la cantidad";
+        }
+        else if(preciocompra.equals("")){
+            error = 4;
+            mensaje = "el precio compra";
+        }
+        else if(preciventa.equals("")){
+            error = 5;
+            mensaje = "el precio venta";
+        }
+        
+        if(error==0){
+                try{
+                    PreparedStatement pst=cn.prepareStatement("INSERT INTO producto(codigo, descripcion, id_unidad, cantidad, precio_compra, precio_venta, id_area_producto) VALUES(?,?,?,?,?,?,?)");
+                    pst.setString(1,codigo);
+                    pst.setString(2,decrip);
+                    pst.setInt(3, idUnidad);
+                    pst.setString(4,can);
+                    pst.setString(5, preciocompra);
+                    pst.setString(6, preciventa);
+                    pst.setInt(7, idArea);
+
+
+                    int a=pst.executeUpdate();
+                    if(a>0){
+                        JOptionPane.showMessageDialog(null,"Producto Registro con exito");
+                         mostrarProductos();
+                    }
+                    else{
+                         JOptionPane.showMessageDialog(null,"Error al agregar");
+                    }
+                }catch(Exception e){
+            }
+                limpiar();
+        }else{
+            if(error==6){
+                JOptionPane.showMessageDialog(null,"El codigo que esta ingresando ya existe");
+                txt_codigo.setText("");
+            }else{
+                JOptionPane.showMessageDialog(null,"Asegurese de llenar todo los campos");
+            }
+            
+        }
+        
+    }
+    
+    public void ActualizarProducto(){
+        try {
+        
+        String Ssql = "UPDATE producto SET descripcion=?, cantidad=?, precio_compra=?, precio_venta=? WHERE codigo =?";
+        
+        PreparedStatement prest = cn.prepareStatement(Ssql);
+        
+        prest.setString(1, txtA_descripcion.getText());
+        prest.setString(2, txt_cantidad.getText());
+        prest.setString(3, txtx_precio_compra.getText());
+        prest.setString(4, txt_precio_venta.getText());
+        prest.setString(5, txt_codigo.getText());
+        
+        if(prest.executeUpdate() > 0){
+        
+            JOptionPane.showMessageDialog(null, "Los datos han sido modificados con éxito", "Operación Exitosa",JOptionPane.INFORMATION_MESSAGE);
+            txt_codigo.setEditable(true);
+        }else{
+        
+            JOptionPane.showMessageDialog(null, "No se ha podido realizar la actualización de los datos\n"
+            + "Inténtelo nuevamente.", "Error en la operación", JOptionPane.ERROR_MESSAGE);
+        
+        }
+        
+        } catch (SQLException e) {
+
+            JOptionPane.showMessageDialog(null, "No se ha podido realizar la actualización de los datos\n"
+                                              + "Inténtelo nuevamente.\n"
+                                              + "Error: "+e, "Error en la operación", 
+                                              JOptionPane.ERROR_MESSAGE);
+
+        }
+        
+        mostrarProductos();
+    }
+    
+    public void limpiar(){
+        txtA_descripcion.setText("");
+        txt_cantidad.setText("");
+        txt_codigo.setText("");
+        txt_precio_venta.setText("");
+        txtx_precio_compra.setText("");
     }
 
     /**
@@ -139,6 +241,8 @@ public final class Registrar_Productos extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPopupMenu1 = new javax.swing.JPopupMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable_productos = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
@@ -163,6 +267,14 @@ public final class Registrar_Productos extends javax.swing.JFrame {
         jComboBox2 = new javax.swing.JComboBox<>();
         jLabel9 = new javax.swing.JLabel();
 
+        jMenuItem1.setText("Seleccionar");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jPopupMenu1.add(jMenuItem1);
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -175,6 +287,7 @@ public final class Registrar_Productos extends javax.swing.JFrame {
 
             }
         ));
+        jTable_productos.setComponentPopupMenu(jPopupMenu1);
         jScrollPane1.setViewportView(jTable_productos);
 
         getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(55, 391, 671, 213));
@@ -230,6 +343,11 @@ public final class Registrar_Productos extends javax.swing.JFrame {
         getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 340, -1, -1));
 
         jButton2.setText("Actualizar");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
         getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 340, -1, -1));
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
@@ -278,6 +396,7 @@ public final class Registrar_Productos extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         RegistrarProductos();
+        
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
@@ -296,6 +415,33 @@ public final class Registrar_Productos extends javax.swing.JFrame {
         me.setVisible(true);
         dispose();
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        // TODO add your handling code here:
+        int filaSelec = jTable_productos.getSelectedRow();
+        
+        try {
+            txt_codigo.setText(jTable_productos.getValueAt(filaSelec, 0).toString());
+            txtA_descripcion.setText(jTable_productos.getValueAt(filaSelec, 1).toString());
+            txt_cantidad.setText(jTable_productos.getValueAt(filaSelec, 3).toString());
+            txtx_precio_compra.setText(jTable_productos.getValueAt(filaSelec, 4).toString());
+            txt_precio_venta.setText(jTable_productos.getValueAt(filaSelec, 5).toString());
+        } catch (Exception e) {
+        }
+        jButton2.setEnabled(true);
+        jButton1.setEnabled(false);
+        txt_codigo.setEditable(false);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        ActualizarProducto();
+        
+        jButton1.setEnabled(true);
+        jButton2.setEnabled(false);
+        
+        limpiar();
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -348,6 +494,8 @@ public final class Registrar_Productos extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable_productos;
