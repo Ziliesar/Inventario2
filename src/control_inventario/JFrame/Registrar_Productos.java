@@ -65,6 +65,7 @@ public final class Registrar_Productos extends javax.swing.JFrame {
         jLabel8.setForeground(colorGrisL);
         
       //  TextPrompt placeholder = new TextPrompt("Apellido Paterno", txt_busqueda_codigo);
+      
  
     }
     
@@ -512,10 +513,23 @@ public final class Registrar_Productos extends javax.swing.JFrame {
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         // TODO add your handling code here:
         int filaSelec = jTable_productos.getSelectedRow();
-        
+        int idUni = 0;
         try {
             txt_codigo.setText(jTable_productos.getValueAt(filaSelec, 0).toString());
             txtA_descripcion.setText(jTable_productos.getValueAt(filaSelec, 1).toString());
+            
+            String uni = jTable_productos.getValueAt(filaSelec, 2).toString();
+            System.out.println(uni);
+            String sql = "select id_unidad from tipo_unidad where unidad='"+uni+"'";
+            Statement stid=cn.createStatement();
+            ResultSet rsid=stid.executeQuery(sql);
+            
+            while(rsid.next()){
+                idUni = rsid.getInt(1);
+            }
+            int t = idUni -1;
+            System.out.println(t);
+            jComboBox2.setSelectedIndex(t);
             txt_cantidad.setText(jTable_productos.getValueAt(filaSelec, 3).toString());
             txtx_precio_compra.setText(jTable_productos.getValueAt(filaSelec, 4).toString());
             txt_precio_venta.setText(jTable_productos.getValueAt(filaSelec, 5).toString());
