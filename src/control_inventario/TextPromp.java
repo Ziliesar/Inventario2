@@ -3,33 +3,20 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+package control_inventario;
 
-
-/**
- *
- * @author Monkeyelgrande
- */
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
-
 /**
- * The TextPrompt class will display a prompt over top of a text component when
- * the Document of the text field is empty. The Show property is used to
- * determine the visibility of the prompt.
  *
- * The Font and foreground Color of the prompt will default to those properties
- * of the parent text component. You are free to change the properties after
- * class construction.
+ * @author arlir
  */
-public class TextPrompt extends JLabel implements FocusListener, DocumentListener {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+public class TextPromp extends JLabel implements FocusListener, DocumentListener{
+    private static final long serialVersionUID = 1L;
 
 	public enum Show {
 		ALWAYS, FOCUS_GAINED, FOCUS_LOST;
@@ -42,11 +29,11 @@ public class TextPrompt extends JLabel implements FocusListener, DocumentListene
 	private boolean showPromptOnce;
 	private int focusLost;
 
-	public TextPrompt(String text, JTextComponent component) {
+	public TextPromp(String text, JTextComponent component) {
 		this(text, component, Show.ALWAYS);
 	}
 
-	public TextPrompt(String text, JTextComponent component, Show show) {
+	public TextPromp(String text, JTextComponent component, Show show) {
 		this.component = component;
 		setShow(show);
 		document = component.getDocument();
@@ -213,4 +200,5 @@ public class TextPrompt extends JLabel implements FocusListener, DocumentListene
 
 	public void changedUpdate(DocumentEvent e) {
 	}
+    
 }
