@@ -240,17 +240,29 @@ public final class Registrar_Productos extends javax.swing.JFrame {
         canvieja = Integer.parseInt(txt_cantidad.getText());
         
         GNC = nuevacan + canvieja;
+        
+        int idArea, idUnidad;
+        idArea = jComboBox1.getItemAt(jComboBox1.getSelectedIndex()).getId_area_producto(); 
+        idUnidad = jComboBox2.getItemAt(jComboBox2.getSelectedIndex()).getId_unidad();
+        
         try {
         
-        String Ssql = "UPDATE producto SET descripcion=?, cantidad=?, precio_compra=?, precio_venta=? WHERE codigo =?";
+        String Ssql = "UPDATE producto SET descripcion=?, id_unidad=?, cantidad=?, precio_compra=?, precio_venta=?, id_area_producto=? WHERE codigo =?";
         
         PreparedStatement prest = cn.prepareStatement(Ssql);
         
         prest.setString(1, txtA_descripcion.getText());
-        prest.setInt(2, GNC);
-        prest.setString(3, txtx_precio_compra.getText());
-        prest.setString(4, txt_precio_venta.getText());
-        prest.setString(5, txt_codigo.getText());
+        
+        System.out.println("Unidad a actualizar: "+idUnidad);
+        prest.setInt(2, idUnidad);
+        prest.setInt(3, GNC);
+        prest.setString(4, txtx_precio_compra.getText());
+        prest.setString(5, txt_precio_venta.getText());
+        
+        System.out.println("Area a actualizar: "+idArea);
+        prest.setInt(6, idArea);
+        prest.setString(7, txt_codigo.getText());
+        
         
         if(prest.executeUpdate() > 0){
         
@@ -264,12 +276,7 @@ public final class Registrar_Productos extends javax.swing.JFrame {
         }
         
         } catch (SQLException e) {
-
-            JOptionPane.showMessageDialog(null, "No se ha podido realizar la actualización de los datos\n"
-                                              + "Inténtelo nuevamente.\n"
-                                              + "Error: "+e, "Error en la operación", 
-                                              JOptionPane.ERROR_MESSAGE);
-
+            System.out.println("error: "+e);
         }
         
         mostrarProductos();
@@ -513,13 +520,13 @@ public final class Registrar_Productos extends javax.swing.JFrame {
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         // TODO add your handling code here:
         int filaSelec = jTable_productos.getSelectedRow();
-        int idUni = 0;
+        int idUni = 0; int Area = 0;
         try {
             txt_codigo.setText(jTable_productos.getValueAt(filaSelec, 0).toString());
             txtA_descripcion.setText(jTable_productos.getValueAt(filaSelec, 1).toString());
             
             String uni = jTable_productos.getValueAt(filaSelec, 2).toString();
-            System.out.println(uni);
+            
             String sql = "select id_unidad from tipo_unidad where unidad='"+uni+"'";
             Statement stid=cn.createStatement();
             ResultSet rsid=stid.executeQuery(sql);
@@ -528,11 +535,24 @@ public final class Registrar_Productos extends javax.swing.JFrame {
                 idUni = rsid.getInt(1);
             }
             int t = idUni -1;
-            System.out.println(t);
+            
             jComboBox2.setSelectedIndex(t);
             txt_cantidad.setText(jTable_productos.getValueAt(filaSelec, 3).toString());
             txtx_precio_compra.setText(jTable_productos.getValueAt(filaSelec, 4).toString());
             txt_precio_venta.setText(jTable_productos.getValueAt(filaSelec, 5).toString());
+            
+            String area = jTable_productos.getValueAt(filaSelec, 6).toString();
+            
+            String sqlA = "SELECT id_area_producto FROM areas_productos WHERE area_producto='"+area+"'";
+            Statement starea=cn.createStatement();
+            ResultSet rsarea=starea.executeQuery(sqlA);
+            
+            while(rsarea.next()){
+                Area = rsarea.getInt(1);
+            }
+            int y = Area -1;
+            
+            jComboBox1.setSelectedIndex(y);
         } catch (Exception e) {
         }
         jButton2.setEnabled(true);
