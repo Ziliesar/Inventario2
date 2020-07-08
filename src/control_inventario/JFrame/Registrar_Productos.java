@@ -5,6 +5,7 @@
  */
 package control_inventario.JFrame;
 
+import control_inventario.TextPromp;
 import control_inventario.area_productos;
 import control_inventario.conexion;
 import control_inventario.unidad_producto;
@@ -64,7 +65,7 @@ public final class Registrar_Productos extends javax.swing.JFrame {
         jLabel7.setForeground(colorGrisL);
         jLabel8.setForeground(colorGrisL);
         
-      //  TextPrompt placeholder = new TextPrompt("Apellido Paterno", txt_busqueda_codigo);
+        control_inventario.TextPromp placeholder = new TextPromp("Ingrese codigo", txt_busqueda_codigo);
       
  
     }
@@ -374,6 +375,11 @@ public final class Registrar_Productos extends javax.swing.JFrame {
 
         txtA_descripcion.setColumns(20);
         txtA_descripcion.setRows(5);
+        txtA_descripcion.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtA_descripcionKeyReleased(evt);
+            }
+        });
         jScrollPane2.setViewportView(txtA_descripcion);
 
         getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 140, 190, 70));
@@ -603,6 +609,10 @@ public final class Registrar_Productos extends javax.swing.JFrame {
         Registrar_Unidad_Producto rupd = new Registrar_Unidad_Producto();
         rupd.setVisible(true);
     }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void txtA_descripcionKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtA_descripcionKeyReleased
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtA_descripcionKeyReleased
 
     /**
      * @param args the command line arguments

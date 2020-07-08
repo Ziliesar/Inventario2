@@ -49,9 +49,9 @@ public class Registrar_Ventas extends javax.swing.JFrame {
     public static  String horaS, minutos, segundos;
     public static  int horaSA, minutosA, segundosA;
   //METODO INICIAL
-  public static String fecha;
-  public static String hora;
-  public static String fecha(){
+    public static String fecha;
+    public static String hora;
+    public static String fecha(){
       Calendar c1 = Calendar.getInstance();
         Calendar c2 = new GregorianCalendar();
         
@@ -97,7 +97,7 @@ public class Registrar_Ventas extends javax.swing.JFrame {
             segundos="0"+segundos;
         }
       hora=horaS+":"+minutos+":"+segundos;
-      System.out.println("HORA: "+hora);
+      //System.out.println("HORA: "+hora);
       
       
       
@@ -231,7 +231,7 @@ public class Registrar_Ventas extends javax.swing.JFrame {
             Statement st=cn.createStatement();
             ResultSet rs=st.executeQuery(sql);
             while(rs.next()){
-                System.err.println(rs);
+              //  System.err.println(rs);
                 txt_codigo_venta.setText(rs.getString(1));
                 txt_des_venta.setText(rs.getString(2));
                 jlabelUnidad.setText(rs.getString(3));
@@ -265,7 +265,7 @@ public class Registrar_Ventas extends javax.swing.JFrame {
     }
     
     public void RevisarCantidad(){
-        System.out.println("Ingresando revisar valor");
+       // System.out.println("Ingresando revisar valor");
         String cantidad_existente = txt_cantidad_existente.getText();
         String cantidad_venta = txt_cantidad_venta.getText();
         
@@ -291,7 +291,7 @@ public class Registrar_Ventas extends javax.swing.JFrame {
                 total = total + fila;
             }
         } catch (Exception e) {
-            System.err.println("El error es: " + e);
+      //      System.err.println("El error es: " + e);
         }
         txt_total_pagar.setText(Integer.toString(total));
     }
@@ -309,7 +309,7 @@ public class Registrar_Ventas extends javax.swing.JFrame {
         Connection cn=cc.conexion();
             
         int total_filas = jTable_Venta_Productos.getRowCount();
-        System.err.println(total_filas);
+     //   System.err.println(total_filas);
         int valorActual = 0;
         
         for(int p =0; p<total_filas; p++){
@@ -340,7 +340,7 @@ public class Registrar_Ventas extends javax.swing.JFrame {
                 }
                 
             } catch (Exception e) {
-                System.out.println("Error: "+e);
+      //          System.out.println("Error: "+e);
             }
             //------------------------------------------------------------------
             //-----------contador pra codigo de tabla detalle factura---------
@@ -354,9 +354,9 @@ public class Registrar_Ventas extends javax.swing.JFrame {
                     valorActual = rsval.getInt(1);
                 }
             } catch (Exception e) {
-                System.err.println("error al ejecutar consulta: " +e);
+        //        System.err.println("error al ejecutar consulta: " +e);
             }
-            System.out.println("Valor actual: " + valorActual);
+         //   System.out.println("Valor actual: " + valorActual);
             
 
             //------------------------------------------------------------------
@@ -417,13 +417,14 @@ public class Registrar_Ventas extends javax.swing.JFrame {
             
             //----------------------Guardar Factura-----------------------------
             try {
-                PreparedStatement insert_detalle_Fac = cn.prepareStatement("INSERT INTO factura(codigo_factura, cog_detalle_fac, identidad, total, fecha, hora) VALUES (?,?,?,?,?,?);");
+                PreparedStatement insert_detalle_Fac = cn.prepareStatement("INSERT INTO factura(codigo_factura, cog_detalle_fac, identidad, rtn, total, fecha, hora) VALUES (?,?,?,?,?,?,?);");
                 insert_detalle_Fac.setString(1, CodigoFac);
                 insert_detalle_Fac.setString(2, numFac);
                 insert_detalle_Fac.setString(3, txt_id_vendedor.getText());
-                insert_detalle_Fac.setString(4, txt_total_pagar.getText());
-                insert_detalle_Fac.setString(5, txt_fecha_fac.getText());
-                insert_detalle_Fac.setString(6, txt_hora_fac.getText());
+                insert_detalle_Fac.setString(4, txt_rtn_cliente.getText());
+                insert_detalle_Fac.setString(5, txt_total_pagar.getText());
+                insert_detalle_Fac.setString(6, txt_fecha_fac.getText());
+                insert_detalle_Fac.setString(7, txt_hora_fac.getText());
                 
                 int resultado_detalle_fac = insert_detalle_Fac.executeUpdate();
                 if(resultado_detalle_fac>0){
@@ -433,13 +434,14 @@ public class Registrar_Ventas extends javax.swing.JFrame {
                 }
                 
             } catch (Exception e) {
-                System.err.println("Erro al ingresar: "+e);
+         //       System.err.println("Erro al ingresar: "+e);
             }
             //------------------------------------------------------------------
+            tablaV = (DefaultTableModel) jTable_Venta_Productos.getModel();
     }
     
     public void EvaluarProductoRepetido(){
-        System.out.println("Ingresando revisar codigo producto");
+      //  System.out.println("Ingresando revisar codigo producto");
         String codigoBu = txt_codigo_venta.getText();
         int igual = 0;
         int total_filas = jTable_Venta_Productos.getRowCount();
@@ -453,7 +455,7 @@ public class Registrar_Ventas extends javax.swing.JFrame {
             }else{
                 igual = 0;
             }
-            System.out.println("buscando: "+a);
+       //     System.out.println("buscando: "+a);
         }
         if(igual==1){
             btb_Agregar_Producto.setEnabled(false);
@@ -467,6 +469,7 @@ public class Registrar_Ventas extends javax.swing.JFrame {
         
         
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -498,10 +501,11 @@ public class Registrar_Ventas extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         txt_total_pagar = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
+        jButton4 = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
         recibir1 = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        txt_nombre_cliente = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         txt_fecha_fac = new javax.swing.JTextField();
         txt_id_vendedor = new javax.swing.JTextField();
@@ -512,7 +516,8 @@ public class Registrar_Ventas extends javax.swing.JFrame {
         jLabel14 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        txt_rtn_cliente = new javax.swing.JTextField();
+        BTN_buscar_cliente = new javax.swing.JButton();
         jLabel11 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -691,6 +696,13 @@ public class Registrar_Ventas extends javax.swing.JFrame {
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Otros datos"));
 
+        jButton4.setText("limpiar tabla");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
         jLabel7.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel7.setText("Datos del vendedor");
 
@@ -703,7 +715,8 @@ public class Registrar_Ventas extends javax.swing.JFrame {
         jLabel8.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel8.setText("Datos del cliente");
 
-        jTextField2.setText("null");
+        txt_nombre_cliente.setText("null");
+        txt_nombre_cliente.setEnabled(false);
 
         jLabel9.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel9.setText("Fecha");
@@ -735,10 +748,18 @@ public class Registrar_Ventas extends javax.swing.JFrame {
         jLabel15.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel15.setText("RTN");
 
-        jTextField1.setText("null");
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        txt_rtn_cliente.setText("null");
+        txt_rtn_cliente.setEnabled(false);
+        txt_rtn_cliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                txt_rtn_clienteActionPerformed(evt);
+            }
+        });
+
+        BTN_buscar_cliente.setText("Buscar Cliente");
+        BTN_buscar_cliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BTN_buscar_clienteActionPerformed(evt);
             }
         });
 
@@ -759,7 +780,7 @@ public class Registrar_Ventas extends javax.swing.JFrame {
                                 .addComponent(jLabel13)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(txt_id_vendedor))
-                            .addComponent(jTextField1)
+                            .addComponent(txt_rtn_cliente)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -780,11 +801,18 @@ public class Registrar_Ventas extends javax.swing.JFrame {
                                     .addComponent(jLabel14)
                                     .addComponent(jLabel15))
                                 .addGap(0, 37, Short.MAX_VALUE))
-                            .addComponent(jTextField2))
+                            .addComponent(txt_nombre_cliente))
                         .addGap(38, 38, 38))))
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(124, 124, 124)
-                .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addComponent(jButton4)
+                        .addGap(31, 31, 31)
+                        .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(BTN_buscar_cliente)))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -804,21 +832,26 @@ public class Registrar_Ventas extends javax.swing.JFrame {
                 .addGap(20, 20, 20)
                 .addComponent(jLabel14)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txt_nombre_cliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel15)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 90, Short.MAX_VALUE)
-                .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(29, 29, 29)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel9)
-                    .addComponent(jLabel10))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txt_fecha_fac, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txt_hora_fac, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(txt_rtn_cliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(BTN_buscar_cliente)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 49, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(29, 29, 29)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel9)
+                            .addComponent(jLabel10))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txt_fecha_fac, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txt_hora_fac, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jButton4))
                 .addGap(17, 17, 17))
         );
 
@@ -891,13 +924,31 @@ public class Registrar_Ventas extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_recibir1ActionPerformed
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void txt_rtn_clienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_rtn_clienteActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_txt_rtn_clienteActionPerformed
 
     private void txt_hora_facActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_hora_facActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txt_hora_facActionPerformed
+
+    private void BTN_buscar_clienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTN_buscar_clienteActionPerformed
+        // TODO add your handling code here:
+        Registrar_Cliente regiscl = new Registrar_Cliente();
+        regiscl.setVisible(true);
+    }//GEN-LAST:event_BTN_buscar_clienteActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+        
+        int total_filas = jTable_Venta_Productos.getRowCount();
+        System.out.println("Filas: "+total_filas);
+        for(int p =0; p<=total_filas; p++){
+            tablaV.removeRow(p);
+            System.out.println("Limpiar fila: "+p);
+            p-=1;
+        }
+    }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -935,10 +986,12 @@ public class Registrar_Ventas extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton BTN_buscar_cliente;
     private javax.swing.JButton btb_Agregar_Producto;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -960,8 +1013,6 @@ public class Registrar_Ventas extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable_Venta_Productos;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
     private javax.swing.JLabel jlabelUnidad;
     public static javax.swing.JTextField recibir1;
     private javax.swing.JTextField txt_cantidad_existente;
@@ -971,7 +1022,9 @@ public class Registrar_Ventas extends javax.swing.JFrame {
     public static javax.swing.JTextField txt_fecha_fac;
     public static javax.swing.JTextField txt_hora_fac;
     private javax.swing.JTextField txt_id_vendedor;
+    public static javax.swing.JTextField txt_nombre_cliente;
     private javax.swing.JTextField txt_precio_venta;
+    public static javax.swing.JTextField txt_rtn_cliente;
     private javax.swing.JTextField txt_total_pagar;
     // End of variables declaration//GEN-END:variables
 }

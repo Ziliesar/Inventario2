@@ -6,6 +6,7 @@
 package control_inventario.JFrame;
 
 
+import control_inventario.TextPromp;
 import control_inventario.conexion;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -30,6 +31,8 @@ public class Registrar_Cliente extends javax.swing.JFrame {
     public Registrar_Cliente() {
         initComponents(); 
         mostrarCliente();
+        
+        control_inventario.TextPromp placeholder = new TextPromp("Ingrese el nombre", txt_busqueda_nombre);
     }
     
     public void RegistrarCliente(){
@@ -106,7 +109,36 @@ public class Registrar_Cliente extends javax.swing.JFrame {
         txt_nombre_cliente.setText("");
         txt_apellido_cliente.setText("");
    }
-
+    
+    void BuscarCliente(String nombre){
+        DefaultTableModel modelo=new DefaultTableModel();
+       
+        modelo.addColumn("RTN");
+        modelo.addColumn("Nombre");
+        modelo.addColumn("Apellodos");
+          
+        jTable1.setModel(modelo);
+        String sql="";
+       
+        sql="SELECT * FROM cliente where nombre'"+nombre+"'";
+     
+        
+        String []datos=new String [3];
+        try{
+            Statement st=cn.createStatement();
+            ResultSet rs=st.executeQuery(sql);
+            while(rs.next()){
+            datos[0]=rs.getString(1);
+            datos[1]=rs.getString(2);
+            datos[2]=rs.getString(3);
+            
+            modelo.addRow(datos);
+            }
+            jTable1.setModel(modelo);
+        }catch(SQLException ex){
+            Logger.getLogger(Registrar_Personal.class.getName()).log(Level.SEVERE,null,ex);
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -116,6 +148,8 @@ public class Registrar_Cliente extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPopupMenu1 = new javax.swing.JPopupMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -128,6 +162,17 @@ public class Registrar_Cliente extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
+        txt_busqueda_nombre = new javax.swing.JTextField();
+        jButton4 = new javax.swing.JButton();
+
+        jMenuItem1.setText("Selecionar Cliente");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jPopupMenu1.add(jMenuItem1);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -151,6 +196,7 @@ public class Registrar_Cliente extends javax.swing.JFrame {
 
             }
         ));
+        jTable1.setComponentPopupMenu(jPopupMenu1);
         jScrollPane1.setViewportView(jTable1);
 
         jButton1.setText("Registrar");
@@ -166,6 +212,27 @@ public class Registrar_Cliente extends javax.swing.JFrame {
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
+            }
+        });
+
+        jLabel5.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel5.setText("Buscar cliente");
+
+        txt_busqueda_nombre.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_busqueda_nombreActionPerformed(evt);
+            }
+        });
+        txt_busqueda_nombre.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txt_busqueda_nombreKeyReleased(evt);
+            }
+        });
+
+        jButton4.setText("Regresar a Venta");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
             }
         });
 
@@ -193,16 +260,23 @@ public class Registrar_Cliente extends javax.swing.JFrame {
                                     .addGap(46, 46, 46)
                                     .addComponent(txt_rtn, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(32, 32, 32)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
                         .addGap(81, 81, 81)
                         .addComponent(jButton1)
                         .addGap(18, 18, 18)
                         .addComponent(jButton2)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton3)))
-                .addContainerGap(36, Short.MAX_VALUE))
+                        .addComponent(jButton3)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton4))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(27, 27, 27)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel5)
+                                .addGap(18, 18, 18)
+                                .addComponent(txt_busqueda_nombre, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(41, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -221,14 +295,19 @@ public class Registrar_Cliente extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(txt_apellido_cliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(36, 36, 36)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton2)
-                    .addComponent(jButton3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
+                    .addComponent(jButton3)
+                    .addComponent(jButton4))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(txt_busqueda_nombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(36, 36, 36))
+                .addGap(25, 25, 25))
         );
 
         pack();
@@ -243,6 +322,40 @@ public class Registrar_Cliente extends javax.swing.JFrame {
         // TODO add your handling code here:
         RegistrarCliente();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void txt_busqueda_nombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_busqueda_nombreActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_busqueda_nombreActionPerformed
+
+    private void txt_busqueda_nombreKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_busqueda_nombreKeyReleased
+        // TODO add your handling code here:
+        String nom_cliente = txt_busqueda_nombre.getText();
+        if("".equals(nom_cliente)){
+            mostrarCliente();
+        }else{
+            BuscarCliente(nom_cliente);
+        }
+    }//GEN-LAST:event_txt_busqueda_nombreKeyReleased
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+        dispose();
+        Registrar_Ventas regisv = new Registrar_Ventas();
+        regisv.setVisible(true);
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        // TODO add your handling code here:
+        int filaSelec = jTable1.getSelectedRow();
+        String RTN = jTable1.getValueAt(filaSelec, 0).toString();
+        String NC = jTable1.getValueAt(filaSelec, 1).toString();
+        String AC = jTable1.getValueAt(filaSelec, 2).toString();
+        
+        Registrar_Ventas.txt_nombre_cliente.setText(NC+" "+AC);
+        Registrar_Ventas.txt_rtn_cliente.setText(RTN);
+        
+        dispose();
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -283,13 +396,18 @@ public class Registrar_Cliente extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField txt_apellido_cliente;
+    private javax.swing.JTextField txt_busqueda_nombre;
     private javax.swing.JTextField txt_nombre_cliente;
     private javax.swing.JTextField txt_rtn;
     // End of variables declaration//GEN-END:variables
