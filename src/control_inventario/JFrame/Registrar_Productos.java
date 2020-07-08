@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
+
 /**
  *
  * @author arlir
@@ -62,6 +63,9 @@ public final class Registrar_Productos extends javax.swing.JFrame {
         jLabel6.setForeground(colorGrisL);
         jLabel7.setForeground(colorGrisL);
         jLabel8.setForeground(colorGrisL);
+        
+      //  TextPrompt placeholder = new TextPrompt("Apellido Paterno", txt_busqueda_codigo);
+ 
     }
     
     void mostrarProductos(){
@@ -317,6 +321,7 @@ public final class Registrar_Productos extends javax.swing.JFrame {
         txt_busqueda_codigo = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
         txt_new_cantidad = new javax.swing.JTextField();
+        jButton5 = new javax.swing.JButton();
         jLabel9 = new javax.swing.JLabel();
 
         jMenuItem1.setText("Seleccionar");
@@ -406,6 +411,11 @@ public final class Registrar_Productos extends javax.swing.JFrame {
         jLabel8.setText("Área producto:");
         getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 260, -1, -1));
 
+        jComboBox1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jComboBox1MouseClicked(evt);
+            }
+        });
         jComboBox1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox1ActionPerformed(evt);
@@ -456,6 +466,14 @@ public final class Registrar_Productos extends javax.swing.JFrame {
         txt_new_cantidad.setText("0");
         getContentPane().add(txt_new_cantidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 140, 160, -1));
 
+        jButton5.setText("Agregar Unidad");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 330, -1, -1));
+
         jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/control_inventario/JFrame/fondoR.jpg"))); // NOI18N
         getContentPane().add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 800, 650));
 
@@ -474,12 +492,14 @@ public final class Registrar_Productos extends javax.swing.JFrame {
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         // TODO add your handling code here:
+        
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
         Registrar_Area_Productos Arp = new Registrar_Area_Productos();
         Arp.setVisible(true);
+        dispose();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
@@ -538,6 +558,18 @@ public final class Registrar_Productos extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txt_busqueda_codigoKeyPressed
 
+    private void jComboBox1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jComboBox1MouseClicked
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_jComboBox1MouseClicked
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        // TODO add your handling code here:
+        dispose();
+        Registrar_Unidad_Producto rupd = new Registrar_Unidad_Producto();
+        rupd.setVisible(true);
+    }//GEN-LAST:event_jButton5ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -578,6 +610,7 @@ public final class Registrar_Productos extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
     private javax.swing.JComboBox<area_productos> jComboBox1;
     private javax.swing.JComboBox<unidad_producto> jComboBox2;
     private javax.swing.JLabel jLabel1;
