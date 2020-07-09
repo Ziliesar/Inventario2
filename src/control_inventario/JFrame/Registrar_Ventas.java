@@ -219,13 +219,16 @@ public class Registrar_Ventas extends javax.swing.JFrame {
     }
     
     void BuscarProducto(){
+        txt_cantidad_venta.setText("1");
         control_inventario.conexion cc = new conexion();
         Connection cn = cc.conexion();
-        String Buscar_descrip_producto = txt_des_venta.getText();
+        String Buscar_cod_producto = txt_codigo_venta.getText();
+        int tamañoCodigo=Buscar_cod_producto.length();
+        
         String sql="";
        
         sql="SELECT pd.codigo, pd.descripcion, uni.unidad, pd.cantidad, pd.precio_compra, pd.precio_venta, apd.area_producto\n" +
-            "FROM producto pd INNER JOIN tipo_unidad uni on pd.id_unidad=uni.id_unidad INNER JOIN areas_productos apd on pd.id_area_producto=apd.id_area_producto where descripcion = '"+Buscar_descrip_producto+"'";
+            "FROM producto pd INNER JOIN tipo_unidad uni on pd.id_unidad=uni.id_unidad INNER JOIN areas_productos apd on pd.id_area_producto=apd.id_area_producto where codigo = '"+Buscar_cod_producto+"'";
      
         try{
             Statement st=cn.createStatement();
@@ -243,6 +246,13 @@ public class Registrar_Ventas extends javax.swing.JFrame {
         }catch(SQLException ex){
             Logger.getLogger(Registrar_Ventas.class.getName()).log(Level.SEVERE,null,ex);
         }
+       
+            if(tamañoCodigo==13){
+                AgregarProducto();
+                txt_codigo_venta.setText("");
+                txt_des_venta.setText("");
+                txt_cantidad_venta.setText("");
+            }
         
     }
     
@@ -548,6 +558,11 @@ public class Registrar_Ventas extends javax.swing.JFrame {
         txt_des_venta.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 txt_des_ventaMouseExited(evt);
+            }
+        });
+        txt_des_venta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_des_ventaActionPerformed(evt);
             }
         });
         txt_des_venta.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -895,7 +910,7 @@ public class Registrar_Ventas extends javax.swing.JFrame {
 
     private void txt_des_ventaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_des_ventaKeyReleased
         // TODO add your handling code here:
-        BuscarProducto();
+        
     }//GEN-LAST:event_txt_des_ventaKeyReleased
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -912,7 +927,7 @@ public class Registrar_Ventas extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void txt_codigo_ventaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_codigo_ventaKeyReleased
-        // TODO add your handling code here:
+        BuscarProducto();
         
     }//GEN-LAST:event_txt_codigo_ventaKeyReleased
 
@@ -937,6 +952,10 @@ public class Registrar_Ventas extends javax.swing.JFrame {
         Registrar_Cliente regiscl = new Registrar_Cliente();
         regiscl.setVisible(true);
     }//GEN-LAST:event_BTN_buscar_clienteActionPerformed
+
+    private void txt_des_ventaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_des_ventaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_des_ventaActionPerformed
 
     /**
      * @param args the command line arguments
