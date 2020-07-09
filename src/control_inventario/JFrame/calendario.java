@@ -160,7 +160,7 @@ public class calendario extends javax.swing.JFrame {
             control_inventario.conexion coon = new conexion(); //where nombre_user='"+user+"' and '"+contra+"'
             Connection con = coon.conexion();
             
-            String sql = "SELECT fac.codigo_factura, fac.cog_detalle_fac, CONCAT(per.nombres, \" \", per.apellidos), fac.total, fac.fecha, fac.hora FROM factura fac inner JOIN personal per on fac.identidad=per.identidad WHERE fac.fecha='"+text+"'";
+            String sql = "SELECT fac.codigo_factura, fac.cog_detalle_fac, CONCAT(per.nombres, \" \", per.apellidos), fac.total, fac.hora FROM factura fac inner JOIN personal per on fac.identidad=per.identidad WHERE fac.fecha='"+text+"'";
             ps=(PreparedStatement) con.prepareStatement(sql);
             rs=ps.executeQuery();
             
@@ -185,7 +185,7 @@ public class calendario extends javax.swing.JFrame {
         } 
     }//GEN-LAST:event_btnMostrarActionPerformed
 
-    
+     public static String codigoFac;
     //CLICK DERECHO
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         DefaultTableModel tm = (DefaultTableModel) jtVentas.getModel();
@@ -196,7 +196,7 @@ public class calendario extends javax.swing.JFrame {
         control_inventario.conexion cc8 = new conexion(); //where nombre_user='"+user+"' and '"+contra+"'
         Connection cn8 = cc8.conexion();
         String identBD8="SELECT cog_detalle_fac FROM factura where codigo_factura='"+dato+"'";  
-        String codigoFac="HHH";
+        codigoFac="HHH";
         try {           
             Statement st8=cn8.createStatement();
             ResultSet rs8=st8.executeQuery(identBD8);            
@@ -206,9 +206,9 @@ public class calendario extends javax.swing.JFrame {
         } catch (SQLException ex) {
             Logger.getLogger(InicioSesion.class.getName()).log(Level.SEVERE, null, ex);
         } 
-        
-        Registrar_Ventas regisV = new Registrar_Ventas();
-        regisV.setVisible(true);
+
+        DetallesFac detallfac=new DetallesFac();
+        detallfac.setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 //FIN POPPUPS
     
