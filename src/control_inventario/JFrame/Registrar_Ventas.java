@@ -501,7 +501,6 @@ public class Registrar_Ventas extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         txt_total_pagar = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
-        jButton4 = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
         recibir1 = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
@@ -696,13 +695,6 @@ public class Registrar_Ventas extends javax.swing.JFrame {
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Otros datos"));
 
-        jButton4.setText("limpiar tabla");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
-            }
-        });
-
         jLabel7.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel7.setText("Datos del vendedor");
 
@@ -806,9 +798,7 @@ public class Registrar_Ventas extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addComponent(jButton4)
-                        .addGap(31, 31, 31)
+                        .addGap(140, 140, 140)
                         .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addContainerGap()
@@ -840,18 +830,15 @@ public class Registrar_Ventas extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(BTN_buscar_cliente)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 49, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(29, 29, 29)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel9)
-                            .addComponent(jLabel10))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txt_fecha_fac, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txt_hora_fac, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jButton4))
+                .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(29, 29, 29)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9)
+                    .addComponent(jLabel10))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txt_fecha_fac, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txt_hora_fac, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(17, 17, 17))
         );
 
@@ -909,6 +896,14 @@ public class Registrar_Ventas extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         RegistrarDetalleVenta();
+        int total_filas = jTable_Venta_Productos.getRowCount();
+        total_filas=total_filas-1;
+        System.out.println("Filas: "+total_filas);
+        for(int p =total_filas; p>=0; p--){
+            tablaV.removeRow(p);
+            System.out.println("Limpiar fila: "+p);
+           
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void txt_codigo_ventaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_codigo_ventaKeyReleased
@@ -937,18 +932,6 @@ public class Registrar_Ventas extends javax.swing.JFrame {
         Registrar_Cliente regiscl = new Registrar_Cliente();
         regiscl.setVisible(true);
     }//GEN-LAST:event_BTN_buscar_clienteActionPerformed
-
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
-        
-        int total_filas = jTable_Venta_Productos.getRowCount();
-        System.out.println("Filas: "+total_filas);
-        for(int p =0; p<=total_filas; p++){
-            tablaV.removeRow(p);
-            System.out.println("Limpiar fila: "+p);
-            p-=1;
-        }
-    }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -991,7 +974,6 @@ public class Registrar_Ventas extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
