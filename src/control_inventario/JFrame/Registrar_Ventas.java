@@ -858,9 +858,14 @@ public class Registrar_Ventas extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void btb_Agregar_ProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btb_Agregar_ProductoActionPerformed
-      
+        String canv = txt_cantidad_venta.getText();
+        if(("".equals(canv)) || ("0".equals(canv))){
+            JOptionPane.showMessageDialog(null,"Por favor ingrese una cantidad");
+        }else{
+            EvaluarProductoRepetido();
+        }
         
-        EvaluarProductoRepetido();
+        
         
     }//GEN-LAST:event_btb_Agregar_ProductoActionPerformed
 
