@@ -202,14 +202,15 @@ public final class Registrar_Productos extends javax.swing.JFrame {
         
         if(error==0){
                 try{
-                    PreparedStatement pst=cn.prepareStatement("INSERT INTO producto(codigo, descripcion, id_unidad, cantidad, precio_compra, precio_venta, id_area_producto) VALUES(?,?,?,?,?,?,?)");
+                    PreparedStatement pst=cn.prepareStatement("INSERT INTO producto(codigo, descripcion, id_unidad, cantidad, cantidadTem, precio_compra, precio_venta, id_area_producto) VALUES(?,?,?,?,?,?,?,?)");
                     pst.setString(1,codigo);
                     pst.setString(2,decrip);
                     pst.setInt(3, idUnidad);
                     pst.setString(4,can);
-                    pst.setString(5, preciocompra);
-                    pst.setString(6, preciventa);
-                    pst.setInt(7, idArea);
+                    pst.setString(5,can);
+                    pst.setString(6, preciocompra);
+                    pst.setString(7, preciventa);
+                    pst.setInt(8, idArea);
 
 
                     int a=pst.executeUpdate();
@@ -248,7 +249,7 @@ public final class Registrar_Productos extends javax.swing.JFrame {
         
         try {
         
-        String Ssql = "UPDATE producto SET descripcion=?, id_unidad=?, cantidad=?, precio_compra=?, precio_venta=?, id_area_producto=? WHERE codigo =?";
+        String Ssql = "UPDATE producto SET descripcion=?, id_unidad=?, cantidad=?, cantidadTem=?, precio_compra=?, precio_venta=?, id_area_producto=? WHERE codigo =?";
         
         PreparedStatement prest = cn.prepareStatement(Ssql);
         
@@ -257,12 +258,13 @@ public final class Registrar_Productos extends javax.swing.JFrame {
         System.out.println("Unidad a actualizar: "+idUnidad);
         prest.setInt(2, idUnidad);
         prest.setInt(3, GNC);
-        prest.setString(4, txtx_precio_compra.getText());
-        prest.setString(5, txt_precio_venta.getText());
+        prest.setInt(4, GNC);
+        prest.setString(5, txtx_precio_compra.getText());
+        prest.setString(6, txt_precio_venta.getText());
         
         System.out.println("Area a actualizar: "+idArea);
-        prest.setInt(6, idArea);
-        prest.setString(7, txt_codigo.getText());
+        prest.setInt(7, idArea);
+        prest.setString(8, txt_codigo.getText());
         
         
         if(prest.executeUpdate() > 0){
