@@ -46,7 +46,8 @@ public class InicioSesion extends javax.swing.JFrame {
     /**
      * Creates new form InicioSesion
      */
-    
+        control_inventario.conexion cc = new conexion(); //where nombre_user='"+user+"' and '"+contra+"'
+        Connection cn = cc.conexion();
     
     public InicioSesion() {
         int valorInt;
@@ -108,113 +109,37 @@ public class InicioSesion extends javax.swing.JFrame {
     }
     String user2a;
     public void Login(){
-         String user = jTextField1.getText();
+        
+        String user = jTextField1.getText();
         String contra = jpass_contra_user.getText();
-        
-        
-        control_inventario.conexion cc = new conexion(); //where nombre_user='"+user+"' and '"+contra+"'
-        Connection cn = cc.conexion();
-        
-        
+
         conexionH ccH = new conexionH(); //where nombre_user='"+user+"' and '"+contra+"'
         Connection cnH = ccH.conexionH();
-        String sql="SELECT nombre_user FROM usuario where nombre_user='"+user+"'";
-        String sql2="SELECT contra_user FROM usuario where contra_user='"+contra+"'";
-        String verificar1="SELECT identidad FROM usuario where nombre_user='"+user+"'";
-        String verificar2="SELECT identidad FROM usuario where contra_user='"+contra+"'";
-        
-        String cp3="NN!";
-        String cp4="NN$";
-        
-        
-        int paseuser = 0;
-        int pasecontra = 0;
-        int entra = 0;
-
-                
-                
+        String sql="SELECT nombre_user, contra_user FROM usuario WHERE nombre_user='"+user+"' and contra_user='"+contra+"'"; 
+        String user2 = "", contra2 = "";
         try {
             Statement st=cn.createStatement();
             ResultSet rs=st.executeQuery(sql);
             
             while(rs.next()){
-                String usn = rs.getString(1);
-               
-                
-                if(usn.equals(user)){
-                    //System.out.println("Bienvenido");
-                    paseuser = 1;
-                    
-                }
-            }
-            
-            Statement st2=cn.createStatement();
-            ResultSet rs2=st2.executeQuery(sql2);
-            
-            while(rs2.next()){
-                String cp = rs2.getString(1);
-                if(cp.equals(contra)){
-                    //System.out.println("Bienvenido contra");
-                    pasecontra = 1;
-                }
-            }
-            
-            
-            Statement st3=cn.createStatement();
-            ResultSet rs3=st3.executeQuery(verificar1);
-            
-            while(rs3.next()){
-                 cp3 = rs3.getString(1);
-                
-            }
-            Statement st4=cn.createStatement();
-            ResultSet rs4=st4.executeQuery(verificar2);
-            
-            while(rs4.next()){
-                cp4 = rs4.getString(1);
-                
-            }
-            
-            
-            
-            
-            
-            
-            if(((pasecontra==0) && (paseuser==0))){
-                JOptionPane.showMessageDialog(null, "Usuario y Contraseña Incorrecta"); 
-                jpass_contra_user.setText("");
-                jTextField1.setText("");
-                entra=1;
-            }
-            
-            if((pasecontra==0) && (entra==0)){
-                JOptionPane.showMessageDialog(null, "Contraseña Incorrecta"); jpass_contra_user.setText("");
-            }
-            
-            if((paseuser==0) && (entra==0)){
-                JOptionPane.showMessageDialog(null, "Usuario incorrecto"); jTextField1.setText("");
-            }
-            
-            
-            
-            if(cp3.equals(cp4)){
-                
-            }else{
-                JOptionPane.showMessageDialog(null, "Favor verifique sus datos"); jTextField1.setText("");
-                paseuser=0;
-                pasecontra=0;
-            }
-            
-            if((paseuser==1) && (pasecontra==1)){
-                
-                JOptionPane.showMessageDialog(null, "Bienvenido");
-                Menu m = new Menu();
-                m.setVisible(true);
-                dispose();
-            }
-            
+                user2 = rs.getString(1);
+                contra2 = rs.getString(2);
+            }  
         } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Erroo al consultar: "+ex);
             Logger.getLogger(InicioSesion.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println("user: "+user2);
+        System.out.println("contra: "+contra2);
+        if((user.equals(user2)) && (contra.equals(contra2))){
+            JOptionPane.showMessageDialog(null, "Bienvenidos");
+            Menu me = new Menu();
+            me.setVisible(true);
+            dispose();
+        }else{
+            JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrecta");
+            jTextField1.setText("");
+            jpass_contra_user.setText("");
         }
         
     }
