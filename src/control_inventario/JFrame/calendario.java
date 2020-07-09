@@ -56,6 +56,7 @@ public class calendario extends javax.swing.JFrame {
         btnMostrar = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jtVentas = new javax.swing.JTable();
+        jButton1 = new javax.swing.JButton();
 
         jMenuItem1.setText("Ver información");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
@@ -107,6 +108,14 @@ public class calendario extends javax.swing.JFrame {
         jtVentas.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jScrollPane2.setViewportView(jtVentas);
 
+        jButton1.setText("Regresar");
+        jButton1.setToolTipText("");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -121,7 +130,11 @@ public class calendario extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 511, Short.MAX_VALUE)
-                            .addComponent(btnMostrar))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(jButton1)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnMostrar)))
                         .addGap(45, 45, 45)))
                 .addGap(20, 20, 20))
         );
@@ -133,8 +146,10 @@ public class calendario extends javax.swing.JFrame {
                     .addComponent(jdcFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnMostrar)
-                .addGap(28, 28, 28)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnMostrar)
+                    .addComponent(jButton1))
+                .addGap(27, 27, 27)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 342, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(44, Short.MAX_VALUE))
         );
@@ -210,6 +225,13 @@ public class calendario extends javax.swing.JFrame {
         DetallesFac detallfac=new DetallesFac();
         detallfac.setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        Menu me = new Menu();
+        me.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
 //FIN POPPUPS
     
     /**
@@ -249,6 +271,7 @@ public class calendario extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnMostrar;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPopupMenu jPopupMenu1;
