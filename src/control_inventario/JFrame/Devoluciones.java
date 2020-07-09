@@ -79,7 +79,8 @@ public class Devoluciones extends javax.swing.JFrame {
         String codDFac = jTable_devolucion.getValueAt(0, 1).toString();
 
             DefaultTableModel modelo=new DefaultTableModel();
-
+            
+            modelo.addColumn("C.D.FAC");
             modelo.addColumn("Codigo Producto");
             modelo.addColumn("Descripcion");
             modelo.addColumn("Precio Venta");
@@ -89,10 +90,10 @@ public class Devoluciones extends javax.swing.JFrame {
             jTable_detalle_fac.setModel(modelo);
             String sql="";
 
-            sql="SELECT pd.codigo, pd.descripcion, pd.precio_venta, df.cantidadV, df.total FROM detalle_factura df INNER JOIN producto pd on df.codigo=pd.codigo where df.cog_detalle_fac='"+codDFac+"'";
+            sql="SELECT df.cog_detalle_fac, pd.codigo, pd.descripcion, pd.precio_venta, df.cantidadV, df.total FROM detalle_factura df INNER JOIN producto pd on df.codigo=pd.codigo where df.cog_detalle_fac='"+codDFac+"'";
 
 
-            String []datos=new String [5];
+            String []datos=new String [6];
             try{
                 Statement st=cn.createStatement();
                 ResultSet rs=st.executeQuery(sql);
@@ -102,6 +103,7 @@ public class Devoluciones extends javax.swing.JFrame {
                 datos[2]=rs.getString(3);
                 datos[3]=rs.getString(4);
                 datos[4]=rs.getString(5);
+                datos[5]=rs.getString(6);
 
                 modelo.addRow(datos);
                 }
@@ -112,40 +114,97 @@ public class Devoluciones extends javax.swing.JFrame {
         
     }
     
-    void devolver(String cod, String can, String pre){
-        int c = Integer.parseInt(can);
-        int p = Integer.parseInt(pre);
-        int t = c*p;
-        try {
-            String Dsql = "UPDATE detalle_factura SET cantidadV=?, total=? WHERE cog_detalle_fac =?";
-            PreparedStatement prest = cn.prepareStatement(Dsql);
-            prest.setString(1, can);
-            prest.setInt(2, t);
-            prest.setString(3, cod);
-            
-            if(prest.executeUpdate() > 0){
-                JOptionPane.showMessageDialog(null,"Producto Modificado");
+    void devolver(String cod, String can, String pre, int cdf){
+        int cantidad_vendida, precio, total, cantidad_devuelta, nuevac;
+        
+        cantidad_vendida = Integer.parseInt(can);
+        precio = Integer.parseInt(pre);
+        cantidad_devuelta = Integer.parseInt(txt_can_devol.getText());
+        
+        if(cantidad_devuelta>cantidad_vendida){
+            JOptionPane.showMessageDialog(null,"La cantidad a devolver excede la vendida");
+        }else{
+            nuevac = cantidad_vendida - cantidad_devuelta;
+            total = nuevac * precio;
+            try {
+                String Dsql = "UPDATE detalle_factura SET cantidadV=?, total=? WHERE cog_detalle_fac =? and codigo=?";
+                PreparedStatement prest = cn.prepareStatement(Dsql);
+                prest.setInt(1, nuevac);
+                prest.setInt(2, total);
+                prest.setInt(3, cdf);
+                prest.setString(4, cod);
+
+                if(prest.executeUpdate() > 0){
+                    JOptionPane.showMessageDialog(null,"Producto Modificado");
+                }
+            } catch (Exception e) {
+                System.err.println("Error al devolver Producto: "+e);
             }
-        } catch (Exception e) {
-            System.err.println("Error al devolver Producto: "+3);
-        }
-        int CanEx = 0;
-        int CanDev = 0;
-        try {
-            String Csql = "SELECT cantidad FROM producto WHERE codigo='"+cod+"'";
-            Statement stcodigo=cn.createStatement();
-            ResultSet rscodigo=stcodigo.executeQuery(Csql);
-            
-            while(rscodigo.next()){
-                CanEx = rscodigo.getInt(1);
+            int CanEx = 0;
+            int CanDev = 0;
+            try {
+                String Csql = "SELECT cantidad FROM producto WHERE codigo='"+cod+"'";
+                Statement stcodigo=cn.createStatement();
+                ResultSet rscodigo=stcodigo.executeQuery(Csql);
+
+                while(rscodigo.next()){
+                    CanEx = rscodigo.getInt(1);
+                }
+                CanDev = cantidad_devuelta + CanEx;
+
+                String Dcansql = "UPDATE producto SET cantidad=? WHERE codigo=?";
+                PreparedStatement pst = cn.prepareStatement(Dcansql);
+                pst.setInt(1, CanDev);
+                pst.setString(2, cod);
+
+                 if(pst.executeUpdate() > 0){
+                     JOptionPane.showMessageDialog(null,"La cantidad de sumar bien");
+                 }
+            } catch (Exception e) {
+                System.err.println("Error al sumar cantidad: "+e);
+            } 
+
+
+            String CodFac = txt_buscar_cod_fac.getText();
+            BusquedaCodigoFac(CodFac);
+
+         //--------------------Cambiar Total a la factura---------------------------
+            int TotalFac = 0; int suma_total =0;
+            int total_filas = jTable_detalle_fac.getRowCount();
+            String codigo_Factura = txt_buscar_cod_fac.getText();
+            for(int p =0; p<total_filas; p++){
+                String Ttotal = jTable_detalle_fac.getValueAt(p, 5).toString();
+                suma_total = Integer.parseInt(Ttotal);
+
+                TotalFac = TotalFac + suma_total;
             }
-            CanDev = c + CanDev;
-            
-            String Dcansql = "UPDATE producto SET cantidad=?, WHERE codigo=?";
-            PreparedStatement pst = cn.prepareStatement(Dcansql);
-            pst.setInt(1, CanDev);
-        } catch (Exception e) {
-        }
+            try {
+                String Dsql = "UPDATE factura SET total=? WHERE codigo_factura=?";
+                PreparedStatement prest = cn.prepareStatement(Dsql);
+                prest.setInt(1, TotalFac);
+                prest.setString(2, codigo_Factura);
+
+                if(prest.executeUpdate() > 0){
+                    JOptionPane.showMessageDialog(null,"La cantidad se actulizo correctamente");
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null,"error al devolver: "+e);
+            }
+
+            //--------------------------------------------------------------------------
+            limpiar();
+            BusquedaCodigoFac(CodFac);
+            }
+        
+    }
+    
+    void limpiar(){
+        txt_cpd.setText("");
+        txt_can.setText("");
+        txt_can_devol.setText("0");
+        txt_precioV.setText("");
+        txt_dpc.setText("");
+        jButton2.setEnabled(false);
     }
 
     /**
@@ -256,28 +315,25 @@ public class Devoluciones extends javax.swing.JFrame {
 
         jButton2.setText("Devolver");
         jButton2.setEnabled(false);
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel8.setText("Precio");
+
+        txt_precioV.setEnabled(false);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addGap(124, 124, 124))
             .addGroup(layout.createSequentialGroup()
                 .addGap(33, 33, 33)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel3)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(18, 18, 18)
-                        .addComponent(txt_buscar_cod_fac, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton1))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
@@ -303,15 +359,24 @@ public class Devoluciones extends javax.swing.JFrame {
                             .addComponent(jButton2)
                             .addComponent(txt_can_devol, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(jScrollPane2)
-                    .addComponent(jScrollPane1))
+                    .addComponent(jScrollPane1)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(txt_buscar_cod_fac, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jButton1)))))
                 .addContainerGap(74, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(24, 24, 24)
+                .addGap(21, 21, 21)
                 .addComponent(jLabel1)
-                .addGap(24, 24, 24)
+                .addGap(27, 27, 27)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(txt_buscar_cod_fac, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -321,12 +386,13 @@ public class Devoluciones extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jLabel3)
                 .addGap(28, 28, 28)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(txt_cpd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2)
-                    .addComponent(jLabel5)
-                    .addComponent(txt_dpc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel4)
+                        .addComponent(txt_cpd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButton2)
+                        .addComponent(txt_dpc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
@@ -358,10 +424,10 @@ public class Devoluciones extends javax.swing.JFrame {
         // TODO add your handling code here:
          int filaSelec = jTable_detalle_fac.getSelectedRow();
          String CD, DPD, PPD, CAN;
-         CD = jTable_detalle_fac.getValueAt(filaSelec, 0).toString();
-         DPD = jTable_detalle_fac.getValueAt(filaSelec, 1).toString();
-         PPD = jTable_detalle_fac.getValueAt(filaSelec, 2).toString();
-         CAN = jTable_detalle_fac.getValueAt(filaSelec, 3).toString();
+         CD = jTable_detalle_fac.getValueAt(filaSelec, 1).toString();
+         DPD = jTable_detalle_fac.getValueAt(filaSelec, 2).toString();
+         PPD = jTable_detalle_fac.getValueAt(filaSelec, 3).toString();
+         CAN = jTable_detalle_fac.getValueAt(filaSelec, 4).toString();
          
          txt_cpd.setText(CD);
          txt_dpc.setText(DPD);
@@ -370,6 +436,19 @@ public class Devoluciones extends javax.swing.JFrame {
          
          jButton2.setEnabled(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        int filaSelec = jTable_detalle_fac.getSelectedRow();
+        String CD, PPD, CAN, CDDF; int CDDF2;
+        CDDF =  jTable_detalle_fac.getValueAt(filaSelec, 0).toString();
+        CDDF2 = Integer.parseInt(CDDF);
+        CD = txt_cpd.getText();
+        PPD = txt_precioV.getText();
+        CAN = txt_can.getText();
+        
+        devolver(CD, CAN, PPD, CDDF2);
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
