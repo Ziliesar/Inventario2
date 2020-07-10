@@ -5,16 +5,22 @@
  */
 package control_inventario.JFrame;
 
+import static control_inventario.JFrame.Registrar_Ventas.usuarioRE;
+import control_inventario.conexion;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 /**
  *
  * @author arlir
  */
 public class Menu extends javax.swing.JFrame {
-
+        control_inventario.conexion cc = new conexion();
+        Connection cn=cc.conexion();
     /**
      * Creates new form Menu
      */
@@ -32,6 +38,38 @@ public class Menu extends javax.swing.JFrame {
         //ImageIcon imagen=new ImageIcon(new ImageIcon(getClass().getResource("img/fond.JPG")).getImage());
         this.jLabel4.setBackground(colorAzulF);
         this.jLabel4.setOpaque(true);
+        
+        Privilegios();
+    }
+    
+    public void Privilegios(){
+        InicioSesion llam23=new InicioSesion();
+        usuarioRE=llam23.conseguirN();
+        
+        String SQL = "SELECT c.cargo FROM personal per INNER JOIN usuario us ON per.identidad=us.identidad INNER JOIN cargo c ON per.id_cargo=c.id_cargo WHERE us.nombre_user='"+usuarioRE+"'";
+        String cargo = "";
+        try {
+            Statement st=cn.createStatement();
+            ResultSet rs=st.executeQuery(SQL);
+            
+            while(rs.next()){
+                cargo = rs.getString(1);  
+            }
+        } catch (Exception e) {
+        }
+        if("Gerente".equals(cargo)){
+            jButton1.setEnabled(false);
+            jButton8.setEnabled(false);
+            jButton9.setEnabled(false);
+        }
+        else if("Vendedor".equals(cargo)){
+            jButton1.setEnabled(false);
+            jButton2.setEnabled(false);
+            jButton3.setEnabled(false);
+            jButton5.setEnabled(false);
+            jButton8.setEnabled(false);
+            jButton9.setEnabled(false);
+        }
     }
 
     /**

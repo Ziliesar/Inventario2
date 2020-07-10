@@ -136,7 +136,8 @@ public class Registrar_Personal extends javax.swing.JFrame {
 
             int a=pst.executeUpdate();
             if(a>0){
-                JOptionPane.showMessageDialog(null,"Registro exitoso");
+                JOptionPane.showMessageDialog(null,"Registro persona");
+                RegistrarUsuario();
                  mostrarPersonal();
                  limpiar();
             }
@@ -169,7 +170,7 @@ public class Registrar_Personal extends javax.swing.JFrame {
         
         int a=pst.executeUpdate();
         if(a>0){
-            JOptionPane.showMessageDialog(null,"Registro exitoso");
+            JOptionPane.showMessageDialog(null,"Registro usuario");
              mostrarPersonal();
         }
         else{
@@ -299,7 +300,8 @@ public class Registrar_Personal extends javax.swing.JFrame {
         // TODO add your handling code here:
          
         RegistrarPersonal();
-        RegistrarUsuario();
+        
+        mostrarPersonal();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
@@ -310,8 +312,8 @@ public class Registrar_Personal extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        Menu me = new Menu();
-        me.setVisible(true);
+        Menu mefer = new Menu();
+        mefer.setVisible(true);
         dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
