@@ -44,7 +44,7 @@ public class Registrar_Ventas extends javax.swing.JFrame {
      * Creates new form Registrar_Ventas
      */
     DefaultTableModel tablaV;
-    Object[] llenar = new Object[5];
+    Object[] llenar = new Object[6];
     String nombreU;
   public static  String usuarioRE;
     public static  String horaS, minutos, segundos;
@@ -121,6 +121,7 @@ public class Registrar_Ventas extends javax.swing.JFrame {
         txt_total_pagar.setEditable(false);
         tablaV = (DefaultTableModel) jTable_Venta_Productos.getModel();
         
+       // OcultarColumnaTabla();
         
         txt_fecha_fac.setEditable(false);
         txt_hora_fac.setEditable(false);
@@ -249,7 +250,7 @@ public class Registrar_Ventas extends javax.swing.JFrame {
         }
        
             if(tamañoCodigo==13){
-                AgregarProducto();
+                EvaluarProductoRepetido();
                 txt_codigo_venta.setText("");
                 txt_des_venta.setText("");
                 txt_cantidad_venta.setText("");
@@ -262,7 +263,7 @@ public class Registrar_Ventas extends javax.swing.JFrame {
         //--------------------------------------------------------------------------
         String Cantidad = txt_cantidad_venta.getText();
         String PrecioVenta = txt_precio_venta.getText();
-        
+        String CantidadEx = txt_cantidad_existente.getText();
         
         int Total1 = Integer.parseInt(Cantidad) * Integer.parseInt(PrecioVenta);
         String Total2 = Integer.toString(Total1);
@@ -272,6 +273,7 @@ public class Registrar_Ventas extends javax.swing.JFrame {
             llenar[2]= Cantidad;
             llenar[3]= PrecioVenta;
             llenar[4]= Total2;
+            llenar[5]= CantidadEx;
 
             tablaV.addRow(llenar);
             //RESTAR EXISTENCIAS
@@ -494,15 +496,11 @@ public class Registrar_Ventas extends javax.swing.JFrame {
       //  System.out.println("Ingresando revisar codigo producto");
         String codigoBu = txt_codigo_venta.getText();
         int igual = 0; int canex = Integer.parseInt(txt_cantidad_existente.getText()); int canTv = 0;
-//        if(igual==1){
-//            btb_Agregar_Producto.setEnabled(false);
-//        }else{
-//            btb_Agregar_Producto.setEnabled(true);
 
-               // btb_Agregar_Producto.setEnabled(true);
         AgregarProducto();
         Total();
         limpiar();
+        
             
             int total_filas2 = jTable_Venta_Productos.getRowCount();
             System.out.println("total filas: "+total_filas2);
@@ -525,11 +523,83 @@ public class Registrar_Ventas extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "La cantida ingresada excede el inventario");
                 tablaV.removeRow(UltimaF);
             }
-       //     System.out.println("buscando: "+a);
         }
-       // }
+    }
+    
+    public void EvaluarProductoRepetido2(String f , int l, int can, int pre, int filas, int canvieja){
+      //  System.out.println("Ingresando revisar codigo producto");
+        String codigoBu = f;
+        int igual = 0; int canex = l; int canTv = 0, total = 0;
         
+            
+            int total_filas2 = jTable_Venta_Productos.getRowCount();
+            System.out.println("total filas: "+total_filas2);
+            int UltimaF = total_filas2 -1;
+            
+            for(int a =0; a<total_filas2; a++){
+            String codigo = jTable_Venta_Productos.getValueAt(a, 0).toString();
+            
+            if(codigoBu.equals(codigo)){
+                
+                String canv = jTable_Venta_Productos.getValueAt(a, 2).toString();
+                int suma_canv = Integer.parseInt(canv);
+                canTv = suma_canv + canTv;
+                /*igual = 1;
+                a=total_filas+1;*/
+            }else{
+                igual = 0;
+            }
+            System.out.println("Suma cantidad venta: "+canTv);
+            if(canTv>canex){
+                int TotalViejo = canvieja * pre;
+                JOptionPane.showMessageDialog(null, "La cantida ingresada excede el inventario");
+                jTable_Venta_Productos.setValueAt(canvieja, filas, 2);
+                jTable_Venta_Productos.setValueAt(TotalViejo, filas, 4);
+                Total();
+            }
+            else{
+                total = can * pre;
+                System.out.println("Total tabla: "+total);
+
+                jTable_Venta_Productos.setValueAt(total, filas, 4);
+                Total();
+            }
+        }
+    }
+    
+    public void SumaCantidadTabla(){
+        int filaSelec = jTable_Venta_Productos.getSelectedRow(); 
+        String CanT = "", PreT = "", CodigoT="", CanEx="", TotalPD=""; 
+        int canta = 0, preta = 0, cantaex = 0, totalta=0, cantidadvieja=0;
         
+        CodigoT = jTable_Venta_Productos.getValueAt(filaSelec, 0).toString();
+        CanT = jTable_Venta_Productos.getValueAt(filaSelec, 2).toString();
+        PreT = jTable_Venta_Productos.getValueAt(filaSelec, 3).toString();
+        TotalPD = jTable_Venta_Productos.getValueAt(filaSelec, 4).toString();
+        CanEx = jTable_Venta_Productos.getValueAt(filaSelec, 5).toString();
+        
+        canta = Integer.parseInt(CanT);
+        preta = Integer.parseInt(PreT);
+        cantaex = Integer.parseInt(CanEx);
+        totalta = Integer.parseInt(TotalPD);
+        
+        cantidadvieja = totalta / preta;
+        if(canta>cantaex){
+            JOptionPane.showMessageDialog(null, "La cantida ingresada excede el inventario");
+            
+            jTable_Venta_Productos.setValueAt(cantidadvieja, filaSelec, 2);
+        }else{
+            System.out.println("canvieja: "+cantidadvieja);
+            EvaluarProductoRepetido2(CodigoT, cantaex, canta, preta, filaSelec, cantidadvieja);
+        }
+    }
+    
+    private  void OcultarColumnaTabla(){
+            //Oculta la primera columna de la tabla
+       this.jTable_Venta_Productos.getColumnModel().getColumn(5).setMaxWidth(0);
+       this.jTable_Venta_Productos.getColumnModel().getColumn(5).setMinWidth(0);
+       this.jTable_Venta_Productos. getColumnModel().getColumn(5).setPreferredWidth(0);
+      
     }
 
     /**
@@ -589,9 +659,14 @@ public class Registrar_Ventas extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Código", "Decripción", "Cantidad", "Precio venta", "Total"
+                "Código", "Decripción", "Cantidad", "Precio venta", "Total", "Existencia"
             }
         ));
+        jTable_Venta_Productos.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTable_Venta_ProductosKeyReleased(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTable_Venta_Productos);
 
         getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(34, 378, 533, 253));
@@ -1008,6 +1083,11 @@ public class Registrar_Ventas extends javax.swing.JFrame {
     private void txt_des_ventaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_des_ventaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txt_des_ventaActionPerformed
+
+    private void jTable_Venta_ProductosKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTable_Venta_ProductosKeyReleased
+        // TODO add your handling code here:
+        SumaCantidadTabla();
+    }//GEN-LAST:event_jTable_Venta_ProductosKeyReleased
 
     /**
      * @param args the command line arguments
