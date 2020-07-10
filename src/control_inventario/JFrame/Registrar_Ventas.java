@@ -276,7 +276,7 @@ public class Registrar_Ventas extends javax.swing.JFrame {
             tablaV.addRow(llenar);
             //RESTAR EXISTENCIAS
             String codigo=txt_codigo_venta.getText();
-            System.out.println(codigo);
+        //    System.out.println(codigo);
             
              control_inventario.conexion cc8 = new conexion(); //where nombre_user='"+user+"' and '"+contra+"'
         Connection cn8 = cc8.conexion();
@@ -291,7 +291,7 @@ public class Registrar_Ventas extends javax.swing.JFrame {
         } catch (SQLException ex) {
             Logger.getLogger(InicioSesion.class.getName()).log(Level.SEVERE, null, ex);
         } 
-        System.out.println("EXISTENCIAAAAAS BBBBDDDDD: "+existenciaBD);   
+      //  System.out.println("EXISTENCIAAAAAS BBBBDDDDD: "+existenciaBD);   
         
         String compra=txt_cantidad_venta.getText();
         
@@ -493,29 +493,41 @@ public class Registrar_Ventas extends javax.swing.JFrame {
     public void EvaluarProductoRepetido(){
       //  System.out.println("Ingresando revisar codigo producto");
         String codigoBu = txt_codigo_venta.getText();
-        int igual = 0;
-        int total_filas = jTable_Venta_Productos.getRowCount();
-        
-        for(int a =0; a<total_filas; a++){
+        int igual = 0; int canex = Integer.parseInt(txt_cantidad_existente.getText()); int canTv = 0;
+//        if(igual==1){
+//            btb_Agregar_Producto.setEnabled(false);
+//        }else{
+//            btb_Agregar_Producto.setEnabled(true);
+
+               // btb_Agregar_Producto.setEnabled(true);
+        AgregarProducto();
+        Total();
+        limpiar();
+            
+            int total_filas2 = jTable_Venta_Productos.getRowCount();
+            System.out.println("total filas: "+total_filas2);
+            int UltimaF = total_filas2 -1;
+            for(int a =0; a<total_filas2; a++){
             String codigo = jTable_Venta_Productos.getValueAt(a, 0).toString();
             
             if(codigoBu.equals(codigo)){
-                igual = 1;
-                a=total_filas+1;
+                
+                String canv = jTable_Venta_Productos.getValueAt(a, 2).toString();
+                int suma_canv = Integer.parseInt(canv);
+                canTv = suma_canv + canTv;
+                /*igual = 1;
+                a=total_filas+1;*/
             }else{
                 igual = 0;
             }
+            System.out.println("Suma cantidad venta: "+canTv);
+            if(canTv>canex){
+                JOptionPane.showMessageDialog(null, "La cantida ingresada excede el inventario");
+                tablaV.removeRow(UltimaF);
+            }
        //     System.out.println("buscando: "+a);
         }
-        if(igual==1){
-            btb_Agregar_Producto.setEnabled(false);
-        }else{
-            btb_Agregar_Producto.setEnabled(true);
-            
-            AgregarProducto();
-            Total();
-            limpiar();
-        }
+       // }
         
         
     }
@@ -958,10 +970,10 @@ public class Registrar_Ventas extends javax.swing.JFrame {
         RegistrarDetalleVenta();
         int total_filas = jTable_Venta_Productos.getRowCount();
         total_filas=total_filas-1;
-        System.out.println("Filas: "+total_filas);
+        //System.out.println("Filas: "+total_filas);
         for(int p =total_filas; p>=0; p--){
             tablaV.removeRow(p);
-            System.out.println("Limpiar fila: "+p);
+            //System.out.println("Limpiar fila: "+p);
            
         }
     }//GEN-LAST:event_jButton1ActionPerformed
