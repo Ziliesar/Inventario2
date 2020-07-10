@@ -6,6 +6,7 @@
 package control_inventario.JFrame;
 
 import control_inventario.Control_Inventario;
+import static control_inventario.JFrame.calendario.codigoFac;
 import control_inventario.conexion;
 import control_inventario.conexionH;
 import java.awt.Color;
@@ -256,6 +257,7 @@ public class Registrar_Ventas extends javax.swing.JFrame {
         
     }
     
+    public static String existenciaBD;
     void AgregarProducto(){
         //--------------------------------------------------------------------------
         String Cantidad = txt_cantidad_venta.getText();
@@ -272,8 +274,46 @@ public class Registrar_Ventas extends javax.swing.JFrame {
             llenar[4]= Total2;
 
             tablaV.addRow(llenar);
+            //RESTAR EXISTENCIAS
+            String codigo=txt_codigo_venta.getText();
+            System.out.println(codigo);
+            
+             control_inventario.conexion cc8 = new conexion(); //where nombre_user='"+user+"' and '"+contra+"'
+        Connection cn8 = cc8.conexion();
+        String dbCanT="SELECT cantidadTem FROM producto where codigo='"+codigo+"'";  
+        existenciaBD="HHH";
+        try {           
+            Statement st8=cn8.createStatement();
+            ResultSet rs8=st8.executeQuery(dbCanT);            
+            while(rs8.next()){
+                existenciaBD = rs8.getString(1);  
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(InicioSesion.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+        System.out.println("EXISTENCIAAAAAS BBBBDDDDD: "+existenciaBD);   
+        
+        String compra=txt_cantidad_venta.getText();
+        
+        int existenciaN=Integer.parseInt(existenciaBD);
+        int compraN=Integer.parseInt(compra);
+        
+        existenciaN=existenciaN-compraN;
+        if(existenciaN>0){
+            
+      
+        control_inventario.conexion ccV = new conexion(); //where nombre_user='"+user+"' and '"+contra+"'
+        Connection cnV = ccV.conexion();
+        try {
+            com.mysql.jdbc.PreparedStatement pstH = (com.mysql.jdbc.PreparedStatement) cnV.prepareStatement("UPDATE producto SET cantidadTem='"+existenciaN+"' WHERE codigo='"+codigo+"'");
+        pstH.executeUpdate();
+        } catch (Exception e) {
+        }
+        }else{
+            existenciaN=existenciaN+compraN;
+        }  
     }
-    
+    //FIN AGREGAR PRODUCTO
     public void RevisarCantidad(){
        // System.out.println("Ingresando revisar valor");
         String cantidad_existente = txt_cantidad_existente.getText();
