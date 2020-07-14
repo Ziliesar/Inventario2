@@ -14,7 +14,7 @@ import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.io.FileWriter;
-import java.io.Serial;
+//import java.io.Serial;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.Socket;
