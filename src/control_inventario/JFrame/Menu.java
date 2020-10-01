@@ -181,7 +181,7 @@ public class Menu extends javax.swing.JFrame {
                 jButton6ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 420, 221, 35));
+        getContentPane().add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 420, 230, 35));
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(20, 63, 82));
