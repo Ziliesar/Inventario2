@@ -248,6 +248,7 @@ public class Registrar_Ventas extends javax.swing.JFrame {
             
         }catch(SQLException ex){
             Logger.getLogger(Registrar_Ventas.class.getName()).log(Level.SEVERE,null,ex);
+            JOptionPane.showMessageDialog(null, "Error con el codigo", "Alerta", JOptionPane.WARNING_MESSAGE);
         }
        
             if(tamañoCodigo>7){
@@ -398,19 +399,33 @@ public class Registrar_Ventas extends javax.swing.JFrame {
             }
             //------------------------------------------------------------------
             //-----------contador pra codigo de tabla detalle factura---------
-            String sql3 = "SELECT COUNT(*)+1 FROM factura";
-            
+            String sql3 = "SELECT COUNT(codigo_factura) FROM factura";
+            int valorActualF = 0;
+        
             try {
                 Statement val = cn.createStatement();
                 ResultSet rsval = val.executeQuery(sql3);
                 
                 while(rsval.next()){
-                    valorActual = rsval.getInt(1);
+                    valorActualF = rsval.getInt(1);
                 }
             } catch (Exception e) {
         //        System.err.println("error al ejecutar consulta: " +e);
             }
-         //   System.out.println("Valor actual: " + valorActual);
+            
+        String sql4 = "SELECT COUNT(codigo_factura) FROM credito";
+        int valorActualC = 0;
+            try {
+                Statement val = cn.createStatement();
+                ResultSet rsval = val.executeQuery(sql4);
+                
+                while(rsval.next()){
+                    valorActualC = rsval.getInt(1);
+                }
+            } catch (Exception e) {
+        //        System.err.println("error al ejecutar consulta: " +e);
+            }
+            valorActual = valorActualF + valorActualC +1;
             
 
             //------------------------------------------------------------------
