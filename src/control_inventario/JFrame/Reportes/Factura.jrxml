@@ -16,7 +16,7 @@ FROM
      `producto` producto INNER JOIN `detalle_factura` detalle_factura ON producto.`codigo` = detalle_factura.`codigo`
      INNER JOIN `factura` factura ON detalle_factura.`cog_detalle_fac` = factura.`cog_detalle_fac`
 WHERE
-    factura.`codigo_factura` = $P{CodigoFac}]]>
+     factura.`codigo_factura` = $P{CodigoFac}]]>
 	</queryString>
 	<field name="factura_codigo_factura" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
