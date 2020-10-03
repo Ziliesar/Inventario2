@@ -65,7 +65,7 @@ where credito.`codigo_factura` = $P{codigoFacCD}]]>
 				<textElement textAlignment="Center">
 					<font size="26" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Classic template]]></text>
+				<text><![CDATA[Factura]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="75" y="74" width="424" height="101"/>
